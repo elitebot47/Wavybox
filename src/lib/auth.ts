@@ -1,5 +1,3 @@
-import { PrismaClient, Prisma } from "@prisma/client";
-import { User } from "@prisma/client";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { verifyPassword } from "./hash";

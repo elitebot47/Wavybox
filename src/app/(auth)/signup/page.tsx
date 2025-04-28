@@ -29,7 +29,7 @@ export default function () {
   return (
     <div>
       <h1>Register</h1>
-
+      <div className="text-red-600">{error}</div>
       <div className="flex flex-col">
         <input ref={usernameRef} type="text" placeholder="username" />
         <input ref={passwordRef} type="text" placeholder="password" />
