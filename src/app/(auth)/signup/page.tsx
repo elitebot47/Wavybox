@@ -1,7 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
-import { string, z } from "zod";
-import { PrismaClient, Prisma } from "@prisma/client";
+import { z } from "zod";
 import axios from "axios";
 
 const signupSchema = z.object({
@@ -12,7 +11,7 @@ export default function () {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [error, Seterrors] = useState("");
-
+  const [messages, setMessages] = useState([]);
   async function Sendcreds() {
     const username = usernameRef.current?.value || "";
     const password = passwordRef.current?.value || "";
@@ -21,12 +20,16 @@ export default function () {
       const firsterror = result.error.errors[0]?.message || "invalid input";
       Seterrors(firsterror);
     }
-    const response = (await axios.post("/api/signup", { username, password }))
-      .data;
+    const response = await axios.post("http://localhost:3000/api/signup", {
+      username,
+      password,
+    });
+    setMessages(response.data);
   }
   return (
     <div>
       <h1>Register</h1>
+
       <div className="flex flex-col">
         <input ref={usernameRef} type="text" placeholder="username" />
         <input ref={passwordRef} type="text" placeholder="password" />
