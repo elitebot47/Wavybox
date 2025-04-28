@@ -1,45 +1,49 @@
-import axios from "axios";
+import { PrismaClient } from "@prisma/client";
+import { User } from "@prisma/client";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import Google from "next-auth/providers/google";
+import { verifyPassword } from "./hash";
 
+const client = new PrismaClient();
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
-    Google({
-      authorization: {
-        params: {
-          prompt: "consent",
-          access_type: "offline",
-          response_type: "code",
-        },
-      },
-    }),
     CredentialsProvider({
       name: "Email",
       credentials: {
-        name: {
-          label: "name",
-          placeholder: "john",
-          type: "text",
-        },
-        email: {
+        username: {
           label: "username",
           type: "text",
           placeholder: "eg. smith_1",
         },
         password: { label: "password", type: "password" },
       },
-      async authorize(credentials) {
-        const username = credentials.email;
+      async authorize(credentials: { username: string; password: string }) {
+        const username = credentials.username;
         const password = credentials.password;
-        const user = {
-          username,
-          id: 1,
-          email: "1@gmail.com",
-        };
-        if (user) {
-          return user;
-        } else return null;
+        if (!username || !password) {
+          console.warn("credentials missing!!");
+          return null;
+        }
+        const userdata = await client.user.findFirst({
+          where: {
+            username: username,
+          },
+          include: {
+            posts: true,
+          },
+        });
+
+        if (userdata) {
+          const passwordverify = await verifyPassword(
+            userdata.password,
+            password
+          );
+          if (passwordverify) {
+            return userdata;
+          }
+        } else {
+          return null;
+        }
       },
     }),
   ],
