@@ -9,7 +9,6 @@ const signupSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 export default function () {
-  const client = new PrismaClient();
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [error, Seterrors] = useState("");
@@ -22,7 +21,8 @@ export default function () {
       const firsterror = result.error.errors[0]?.message || "invalid input";
       Seterrors(firsterror);
     }
-    const response = await axios.post("/api/signup", { username, password });
+    const response = (await axios.post("/api/signup", { username, password }))
+      .data;
   }
   return (
     <div>

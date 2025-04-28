@@ -1,10 +1,10 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Prisma } from "@prisma/client";
 import { User } from "@prisma/client";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { verifyPassword } from "./hash";
+import { prisma } from "../lib/prisma";
 
-const client = new PrismaClient();
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     CredentialsProvider({
@@ -24,7 +24,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           console.warn("credentials missing!!");
           return null;
         }
-        const userdata = await client.user.findFirst({
+        const userdata = await prisma.user.findFirst({
           where: {
             username: username,
           },
