@@ -1,17 +1,24 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
+import Loader from "@/components/ui/loader";
 export default function () {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = useState(false);
   async function handleSubmit() {
-    signIn("credentials", {
-      callbackUrl: "/home",
-      username: usernameRef.current?.value,
-      password: passwordRef.current?.value,
-    });
+    try {
+      setLoading(true);
+      signIn("credentials", {
+        callbackUrl: "/home",
+        username: usernameRef.current?.value,
+        password: passwordRef.current?.value,
+      });
+    } catch (error) {
+      console.error("login failed", error);
+    }
   }
   return (
     <div>
@@ -20,7 +27,14 @@ export default function () {
         <input ref={usernameRef} type="text" placeholder="username" />
         <input ref={passwordRef} type="text" placeholder="password" />
       </div>
-      <button onClick={() => handleSubmit()}>Sign in</button>
+      <button
+        disabled={loading}
+        onClick={() => {
+          handleSubmit();
+        }}
+      >
+        {loading ? <Loader></Loader> : "Sign in"}
+      </button>
       <div>
         new user?
         <Link href={"/signup"}>Register</Link>
