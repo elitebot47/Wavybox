@@ -2,6 +2,7 @@
 import { useRef, useState } from "react";
 import { z } from "zod";
 import axios from "axios";
+import Link from "next/link";
 
 const signupSchema = z.object({
   username: z.string().min(1, "username is required"),
@@ -12,6 +13,7 @@ export default function () {
   const passwordRef = useRef<HTMLInputElement>(null);
   const [error, Seterrors] = useState("");
   const [messages, setMessages] = useState([]);
+
   async function Sendcreds() {
     const username = usernameRef.current?.value || "";
     const password = passwordRef.current?.value || "";
@@ -41,6 +43,11 @@ export default function () {
         <input ref={passwordRef} type="text" placeholder="password" />
       </div>
       <button onClick={() => Sendcreds()}>Signup</button>
+      
+      <div className="flex ">
+        <div>want to sign in?</div>
+        <Link href={"/signin"}>sign in</Link>
+      </div>
     </div>
   );
 }

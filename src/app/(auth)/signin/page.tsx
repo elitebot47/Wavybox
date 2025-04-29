@@ -8,6 +8,7 @@ export default function () {
   const passwordRef = useRef<HTMLInputElement>(null);
   async function handleSubmit() {
     signIn("credentials", {
+      callbackUrl: "/",
       username: usernameRef.current?.value,
       password: passwordRef.current?.value,
     });
