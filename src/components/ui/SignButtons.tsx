@@ -6,5 +6,7 @@ export function SignInButton() {
   return <Link href={"/signin"}>Sign in</Link>;
 }
 export function SignOutButton() {
-  return <button onClick={() => signOut()}>signout</button>;
+  return (
+    <button onClick={() => signOut({ callbackUrl: "/signin" })}>signout</button>
+  );
 }
