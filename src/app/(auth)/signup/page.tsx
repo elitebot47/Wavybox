@@ -20,7 +20,7 @@ export default function () {
       const firsterror = result.error.errors[0]?.message || "invalid input";
       Seterrors(firsterror);
     }
-    const response = await axios.post("http://localhost:3000/api/signup", {
+    const response = await axios.post("/api/signup", {
       username,
       password,
     });
@@ -30,8 +30,14 @@ export default function () {
     <div>
       <h1>Register</h1>
       <div className="text-red-600">{error}</div>
+
       <div className="flex flex-col">
-        <input ref={usernameRef} type="text" placeholder="username" />
+        <input
+          className=""
+          ref={usernameRef}
+          type="text"
+          placeholder="username"
+        />
         <input ref={passwordRef} type="text" placeholder="password" />
       </div>
       <button onClick={() => Sendcreds()}>Signup</button>

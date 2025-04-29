@@ -6,10 +6,10 @@ import { prisma } from "../lib/prisma";
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     CredentialsProvider({
-      name: "Email",
+      name: "username and password",
       credentials: {
         username: {
-          label: "username",
+          label: " email or username",
           type: "text",
           placeholder: "eg. smith_1",
         },
@@ -22,27 +22,38 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           console.warn("credentials missing!!");
           return null;
         }
-        const userdata = await prisma.user.findFirst({
+        const userverify = await prisma.user.findFirst({
           where: {
             username: username,
           },
-          include: {
-            posts: true,
-          },
         });
 
-        if (userdata) {
+        if (userverify) {
           const passwordverify = await verifyPassword(
-            userdata.password,
+            userverify.password,
             password
           );
           if (passwordverify) {
+            const userdata = await prisma.user.findFirst({
+              where: {
+                username: username,
+              },
+              include: {
+                posts: true,
+              },
+            });
+            console.log("user login succesfull");
             return userdata;
           }
         } else {
+          console.log("user doesnt exists!!, Register first");
+
           return null;
         }
       },
     }),
   ],
+  pages: {
+    signIn: "/signin",
+  },
 });
