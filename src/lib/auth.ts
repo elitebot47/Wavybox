@@ -3,6 +3,11 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { verifyPassword } from "./hash";
 import { prisma } from "../lib/prisma";
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  callbacks: {
+    authorized: async ({ auth }) => {
+      return !!auth;
+    },
+  },
   providers: [
     CredentialsProvider({
       name: "username and password",

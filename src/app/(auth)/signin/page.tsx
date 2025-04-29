@@ -4,23 +4,42 @@ import { useRef, useState } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import Loader from "@/components/ui/loader";
-import { error } from "console";
+import { z } from "zod";
 
+const signinSchema = z.object({
+  username: z.string().min(1, "Username cant be empty"),
+  password: z
+    .string()
+    .min(6, "password short!! ,should be atleast 6 character "),
+});
 export default function () {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   async function handleSubmit() {
+    const username = usernameRef.current?.value || "";
+    const password = passwordRef.current?.value || "";
     try {
-      setLoading(true);
-      signIn("credentials", {
-        callbackUrl: "/home",
-        username: usernameRef.current?.value,
-        password: passwordRef.current?.value,
-      });
+      const parsed = signinSchema.safeParse({ username, password });
+      if (parsed.success) {
+        setLoading(true);
+        const res = await signIn("credentials", {
+          redirect: false,
+          username,
+          password,
+        });
+        if (res && res.ok) {
+          window.location.href = "/home";
+        } else {
+          setError("invalid password or username");
+        }
+      } else {
+        const firsterror = parsed.error.errors[0]?.message || "invalid input";
+        setError(firsterror);
+      }
     } catch (error) {
-      setError("credentials incorect");
+      setError("credentials incorrect");
     }
   }
   return (
