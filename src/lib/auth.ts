@@ -2,7 +2,6 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { verifyPassword } from "./hash";
 import { prisma } from "../lib/prisma";
-
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     CredentialsProvider({
@@ -18,36 +17,35 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       async authorize(credentials: { username: string; password: string }) {
         const username = credentials.username;
         const password = credentials.password;
+
         if (!username || !password) {
-          console.warn("credentials missing!!");
           return null;
         }
-        const userverify = await prisma.user.findFirst({
-          where: {
-            username: username,
-          },
-        });
-
-        if (userverify) {
-          const passwordverify = await verifyPassword(
-            userverify.password,
-            password
-          );
-          if (passwordverify) {
-            const userdata = await prisma.user.findFirst({
-              where: {
-                username: username,
-              },
-              include: {
-                posts: true,
-              },
-            });
-            console.log("user login succesfull");
-            return userdata;
+        try {
+          const userverify = await prisma.user.findUnique({
+            where: {
+              username: username,
+            },
+          });
+          if (userverify) {
+            const passwordverify = await verifyPassword(
+              userverify.password,
+              password
+            );
+            if (passwordverify) {
+              const userdata = await prisma.user.findFirst({
+                where: {
+                  username: username,
+                },
+                include: {
+                  posts: true,
+                },
+              });
+              console.log("user login succesfull");
+              return userdata;
+            }
           }
-        } else {
-          console.log("user doesnt exists!!, Register first");
-
+        } catch (error) {
           return null;
         }
       },

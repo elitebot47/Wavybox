@@ -22,11 +22,19 @@ export default function () {
       const firsterror = result.error.errors[0]?.message || "invalid input";
       Seterrors(firsterror);
     }
-    const response = await axios.post("/api/signup", {
-      username,
-      password,
-    });
-    setMessages(response.data);
+    try {
+      const response = await axios.post("http://localhost:3000/api/signup", {
+        username,
+        password,
+      });
+      Seterrors(response.data.message);
+    } catch (error: any) {
+      if (error.response) {
+        Seterrors(error.response.data.message);
+      } else {
+        Seterrors("something went wrong");
+      }
+    }
   }
   return (
     <div>
@@ -43,7 +51,7 @@ export default function () {
         <input ref={passwordRef} type="text" placeholder="password" />
       </div>
       <button onClick={() => Sendcreds()}>Signup</button>
-      
+
       <div className="flex ">
         <div>want to sign in?</div>
         <Link href={"/signin"}>sign in</Link>
