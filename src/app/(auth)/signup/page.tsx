@@ -27,14 +27,11 @@ export default function SignUpPage() {
       return;
     }
     try {
-      const response = await axios.post("http://localhost:3000/api/signup", {
+      const response = await axios.post("/api/signup", {
         username,
         password,
       });
       Seterrors(response.data.message);
-      setTimeout(() => {
-        router.push("/signin");
-      }, 2000);
     } catch (error: any) {
       if (error.response) {
         console.error("Error response from server:", error.response.data);
