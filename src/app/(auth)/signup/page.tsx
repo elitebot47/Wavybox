@@ -37,13 +37,11 @@ export default function Signup() {
       }, 2000);
     } catch (error: any) {
       if (error.response) {
-        // Log server-side error response
         console.error("Error response from server:", error.response.data);
         Seterrors(
           error.response.data.message || "An error occurred during signup."
         );
       } else {
-        // Log network or other types of errors
         console.error("Network or other error:", error);
         Seterrors("Network error or server is down.");
       }
