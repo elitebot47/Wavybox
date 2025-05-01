@@ -7,30 +7,32 @@ import { Prisma } from "@prisma/client";
 const signupSchema = z.object({
   username: z.string().min(1, "username is required"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-}); 
+});
 export async function POST(req: NextRequest) {
   try {
     const { username, password } = await req.json();
     const parsed = signupSchema.safeParse({ username, password });
     if (!parsed.success) {
+      const errors = parsed.error.errors
+        .map((error) => error.message)
+        .join(", ");
       return NextResponse.json(
         {
-          message:
-            "username cant be empty/Password must be at least 6 characters",
+          message: errors,
         },
         { status: 409 }
       );
     }
 
     const hashedPassword = await HashPassword(password);
-    await prisma.user.create({
+    const response = await prisma.user.create({
       data: {
         username,
         password: hashedPassword,
       },
     });
     return NextResponse.json(
-      { message: "registation succesfull" },
+      { message: `registration succesfull` },
       { status: 201 }
     );
   } catch (error: any) {

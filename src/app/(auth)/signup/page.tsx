@@ -3,24 +3,28 @@ import { useRef, useState } from "react";
 import { z } from "zod";
 import axios from "axios";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const signupSchema = z.object({
-  username: z.string().min(1, "username is required"),
+  username: z.string().min(1, "Username required"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
-export default function () {
+export default function Signup() {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [error, Seterrors] = useState("");
-  const [messages, setMessages] = useState([]);
+  const router = useRouter();
 
   async function Sendcreds() {
     const username = usernameRef.current?.value || "";
     const password = passwordRef.current?.value || "";
     const result = signupSchema.safeParse({ username, password });
     if (!result.success) {
-      const firsterror = result.error.errors[0]?.message || "invalid input";
-      Seterrors(firsterror);
+      const errors = result.error.errors
+        .map((error) => error.message)
+        .join(", ");
+      Seterrors(errors);
+      return;
     }
     try {
       const response = await axios.post("http://localhost:3000/api/signup", {
@@ -28,11 +32,20 @@ export default function () {
         password,
       });
       Seterrors(response.data.message);
+      setTimeout(() => {
+        router.push("/signin");
+      }, 2000);
     } catch (error: any) {
       if (error.response) {
-        Seterrors(error.response.data.message);
+        // Log server-side error response
+        console.error("Error response from server:", error.response.data);
+        Seterrors(
+          error.response.data.message || "An error occurred during signup."
+        );
       } else {
-        Seterrors("something went wrong");
+        // Log network or other types of errors
+        console.error("Network or other error:", error);
+        Seterrors("Network error or server is down.");
       }
     }
   }
