@@ -9,7 +9,7 @@ const signupSchema = z.object({
   username: z.string().min(1, "Username required"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
-export default function Signup() {
+export default function SignUpPage() {
   const usernameRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [error, Seterrors] = useState("");
