@@ -35,8 +35,10 @@ export default function () {
           setError("invalid password or username");
         }
       } else {
-        const firsterror = parsed.error.errors[0]?.message || "invalid input";
-        setError(firsterror);
+        const errors = parsed.error.errors
+          .map((error) => error.message)
+          .join(", ");
+        setError(errors);
       }
     } catch (error) {
       setError("credentials incorrect");
@@ -45,7 +47,7 @@ export default function () {
   return (
     <div>
       <h1>Login page</h1>
-      {error && <div>{error}</div>}
+      {error && <div className="text-red-600">{error}</div>}
 
       <div className="flex flex-col">
         <input ref={usernameRef} type="text" placeholder="username" />
