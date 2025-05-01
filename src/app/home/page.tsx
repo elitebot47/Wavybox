@@ -1,4 +1,3 @@
-// app/feed/page.tsx
 
 "use server";
 import { auth } from "@/lib/auth";

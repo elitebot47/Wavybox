@@ -17,53 +17,69 @@ export default function () {
   const passwordRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  async function handleSubmit() {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setError("");
+
     const username = usernameRef.current?.value || "";
     const password = passwordRef.current?.value || "";
+
     try {
       const parsed = signinSchema.safeParse({ username, password });
-      if (parsed.success) {
-        setLoading(true);
-        const res = await signIn("credentials", {
-          redirect: false,
-          username,
-          password,
-        });
-        if (res && res.ok) {
-          window.location.href = "/home";
-        } else {
-          setError("invalid password or username");
-        }
-      } else {
+      if (!parsed.success) {
         const errors = parsed.error.errors
           .map((error) => error.message)
           .join(", ");
         setError(errors);
+        return;
+      }
+
+      setLoading(true);
+      const res = await signIn("credentials", {
+        redirect: false,
+        username,
+        password,
+      });
+
+      if (res?.error) {
+        if (res.error === "CredentialsSignin") {
+          setError("Invalid username or password.");
+        } else {
+          setError("An unexpected error occurred. Please try again.");
+        }
+        setLoading(false);
+        return;
+      }
+
+      if (res?.ok) {
+        window.location.href = "/home";
+        setLoading(false);
       }
     } catch (error) {
-      setError("credentials incorrect");
+      setError("An error occurred during sign in. Please try again.");
+      setLoading(false);
     }
   }
   return (
-    <div>
-      <h1>Login page</h1>
-      {error && <div className="text-red-600">{error}</div>}
-
-      <div className="flex flex-col">
-        <input ref={usernameRef} type="text" placeholder="username" />
-        <input ref={passwordRef} type="text" placeholder="password" />
-      </div>
-      <button
-        disabled={loading}
-        onClick={() => {
-          handleSubmit();
-        }}
-      >
-        {loading ? <Loader></Loader> : "Sign in"}
-      </button>
-      <div>
-        new user?
-        <Link href={"/signup"}>Register</Link>
+    <div className="flex flex-col">
+      <div className="">
+        <h1 className="">Login</h1>
+        {error && <div className="text-red-500">{error}</div>}
+        <form onSubmit={handleSubmit} className="">
+          <div className="flex flex-col">
+            <input ref={usernameRef} type="text" placeholder="Username" />
+            <input ref={passwordRef} type="password" placeholder="Password" />
+          </div>
+          <button type="submit" disabled={loading}>
+            {loading ? <Loader /> : "Sign in"}
+          </button>
+        </form>
+        <div className="">
+          New user?{" "}
+          <Link href="/signup" className="text-blue-500 ">
+            Register
+          </Link>
+        </div>
       </div>
     </div>
   );
