@@ -2,26 +2,32 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { verifyPassword } from "./hash";
 import { prisma } from "../lib/prisma";
+
+interface Credentials {
+  email: string;
+  password: string;
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     CredentialsProvider({
-      name: "username and password",
+      name: "Email and password",
       credentials: {
-        username: {
-          label: " email or username",
+        email: {
+          label: "email",
           type: "text",
-          placeholder: "eg. smith_1",
+          placeholder: "eg. manish.sharma@gmail.com",
         },
         password: { label: "password", type: "password" },
       },
-      async authorize(credentials: { username: string; password: string }) {
-        const username = credentials.username;
+      async authorize(credentials: Credentials) {
+        const email = credentials.email;
         const password = credentials.password;
 
         try {
           const user = await prisma.user.findUnique({
             where: {
-              username: username,
+              email: email,
             },
           });
           if (!user) {
@@ -46,12 +52,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id?.toString();
+        token.email = user.email;
         token.username = user.username;
       }
       return token;
     },
     async session({ session, token }: { session: any; token: any }) {
       session.user.id = token.id;
+      session.user.email = token.email;
       session.user.username = token.username;
       return session;
     },
