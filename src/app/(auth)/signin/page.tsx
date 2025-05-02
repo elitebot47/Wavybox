@@ -7,13 +7,13 @@ import Loader from "@/components/ui/loader";
 import { z } from "zod";
 
 const signinSchema = z.object({
-  username: z.string().min(1, "Username cant be empty"),
+  email: z.string().min(1, "email cant be empty"),
   password: z
     .string()
     .min(6, "password short!! ,should be atleast 6 character "),
 });
 export default function () {
-  const usernameRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -21,11 +21,11 @@ export default function () {
     e.preventDefault();
     setError("");
 
-    const username = usernameRef.current?.value || "";
+    const email = emailRef.current?.value || "";
     const password = passwordRef.current?.value || "";
 
     try {
-      const parsed = signinSchema.safeParse({ username, password });
+      const parsed = signinSchema.safeParse({ email, password });
       if (!parsed.success) {
         const errors = parsed.error.errors
           .map((error) => error.message)
@@ -37,13 +37,13 @@ export default function () {
       setLoading(true);
       const res = await signIn("credentials", {
         redirect: false,
-        username,
+        email,
         password,
       });
 
       if (res?.error) {
         if (res.error === "CredentialsSignin") {
-          setError("Invalid username or password.");
+          setError("Invalid email or password.");
         } else {
           setError("An unexpected error occurred. Please try again.");
         }
@@ -67,7 +67,7 @@ export default function () {
         {error && <div className="text-red-500">{error}</div>}
         <form onSubmit={handleSubmit} className="">
           <div className="flex flex-col">
-            <input ref={usernameRef} type="text" placeholder="Username" />
+            <input ref={emailRef} type="text" placeholder="email" />
             <input ref={passwordRef} type="password" placeholder="Password" />
           </div>
           <button type="submit" disabled={loading}>
