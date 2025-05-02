@@ -25,9 +25,8 @@ export default function SignUpPage() {
       return;
     }
     try {
-      const response = await axios.post("http://localhost:3000/api/signup", {
-        email,
-        password,
+      const response = await axios.post("/api/signup", {
+        email,password,
       });
       Seterrors(response.data.message);
     } catch (error: any) {
