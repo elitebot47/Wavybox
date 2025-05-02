@@ -1,5 +1,4 @@
 import argon2 from "argon2";
-import { string } from "zod";
 
 export async function HashPassword(password: string): Promise<string> {
   try {
