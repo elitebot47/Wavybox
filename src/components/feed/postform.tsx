@@ -18,7 +18,7 @@ export default function Postform({ userid }: { userid: number }) {
     const postcontent = postinputRef.current?.value.trim();
     if (!postcontent) {
       setMessage("Post cannot be empty");
-      setPosting(false);
+      setAiloader(false);
       return;
     }
     console.log(postcontent);
@@ -56,42 +56,48 @@ export default function Postform({ userid }: { userid: number }) {
     }
   }
   return (
-    <form className=" border-2 border-black h-32 p-3">
+    <div className=" border-2 border-black h-32 p-">
       <div className="fixed top-0 right-1">{message}</div>
-      <input
-        type="text"
-        ref={postinputRef}
-        placeholder={"so whats on your mood?"}
-        className="border-hidden focus:border-hidden"
-      />
-      <Button onClick={() => Aicontent(`translate this to${language}`)}>
-        {ailoader ? <Loader /> : "Translate to"}
+      <div>
+        <input
+          type="text"
+          ref={postinputRef}
+          placeholder={"so whats on your mood?"}
+          className="border-hidden"
+        />
+      </div>
+      <div className="flex">
+        <div className="flex ">
+          <Button onClick={() => Aicontent(`translate this to${language}`)}>
+            {ailoader ? <Loader /> : "Translate to"}
 
-        <select
-          className="text-black"
-          onChange={(e) => setLanguage(e.target.value)}
-          name="languages"
-          id="languageselect"
-        >
-          <option value="English">English</option>
-          <option value="Russian">Russian</option>
-          <option value="Chinese">Chinese</option>
-        </select>
-      </Button>
-      <Button onClick={() => Aicontent("summarise")}>
-        {ailoader ? <Loader /> : "Summarise"}
-      </Button>
-      <Button
-        onClick={() =>
-          Aicontent("fix spelling and grammar errors only and dont change ")
-        }
-      >
-        {" "}
-        {ailoader ? <Loader /> : "Fix spelling/grammar errors"}
-      </Button>
-      <Button className="" disabled={posting} onClick={Handlepost}>
-        {posting ? <Loader /> : "Post"}
-      </Button>
-    </form>
+            <select
+              className="text-black"
+              onChange={(e) => setLanguage(e.target.value)}
+              name="languages"
+              id="languageselect"
+            >
+              <option value="English">English</option>
+              <option value="Russian">Russian</option>
+              <option value="Chinese">Chinese</option>
+            </select>
+          </Button>
+          <Button onClick={() => Aicontent("summarise")}>
+            {ailoader ? <Loader /> : "Summarise"}
+          </Button>
+          <Button
+            onClick={() =>
+              Aicontent("fix spelling and grammar errors only and dont change ")
+            }
+          >
+            {" "}
+            {ailoader ? <Loader /> : "Fix spelling/grammar errors"}
+          </Button>
+        </div>
+        <Button className="" disabled={posting} onClick={Handlepost}>
+          {posting ? <Loader /> : "Post"}
+        </Button>
+      </div>
+    </div>
   );
 }

@@ -8,7 +8,7 @@ export default async function Homelayout({
 }) {
   return (
     <div className="flex md:w-[95vw] mx-auto md:px-16">
-      <aside className="hidden  md:block md:basis-2/7">
+      <aside className="hidden  md:block md:basis-2/7 ">
         <LeftSideBar></LeftSideBar>
       </aside>
       <div className="w-px bg-gray-300 h-auto mx-2" />{" "}
