@@ -83,7 +83,7 @@ export default function Postform({ userid }: { userid: number }) {
       </Button>
       <Button
         onClick={() =>
-          Aicontent("fix spelling and grammar errors only dont change content")
+          Aicontent("fix spelling and grammar errors only and dont change ")
         }
       >
         {" "}

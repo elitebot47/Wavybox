@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     messages: [
       {
         role: "user",
-        content: `${processtype} this content- ${postcontent} Please respond in plain text without Markdown formatting or asterisks.`,
+        content: `Please respond in plain text without Markdown formatting or asterisks.${processtype} this content-> ${postcontent}`,
       },
     ],
     stream: true,
