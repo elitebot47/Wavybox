@@ -1,3 +1,5 @@
+import { formatDistanceToNow } from "date-fns";
+
 interface Postprops {
   username: string;
   content: string;
@@ -13,11 +15,12 @@ export default function Post({
   createdAt,
   userId,
 }: Postprops) {
+  const timeago = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
   return (
     <div className="flex flex-col">
       <div>
         <div>{username}</div>
-        <div>{createdAt}</div>
+        <div>{timeago}</div>
       </div>
       <div>{content}</div>
     </div>
