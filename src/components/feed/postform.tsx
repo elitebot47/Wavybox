@@ -77,9 +77,11 @@ export default function Postform({ userid }: { userid: number }) {
               name="languages"
               id="languageselect"
             >
+              <option value="Hindi">Hindi</option>
               <option value="English">English</option>
               <option value="Russian">Russian</option>
               <option value="Chinese">Chinese</option>
+              <option value="Japanese">Japanese</option>
             </select>
           </Button>
           <Button onClick={() => Aicontent("summarise")}>
