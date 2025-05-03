@@ -12,7 +12,7 @@ export default async function Homelayout({
         <LeftSideBar></LeftSideBar>
       </aside>
       <div className="w-px bg-gray-300 h-auto mx-2" />{" "}
-      <main className="flex-3/7 px-3 justify-center ">{children}</main>
+      <main className="flex-3/7 px-3 justify-center py-4 ">{children}</main>
       <div className="w-px bg-gray-300 h-auto mx-2" />{" "}
       <aside className="hidden  md:block md:basis-2/7">
         <RightSideBar></RightSideBar>

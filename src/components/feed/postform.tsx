@@ -3,6 +3,7 @@ import { useRef, useState } from "react";
 import { Button } from "../ui/button";
 import axios from "axios";
 import Loader from "../ui/loader";
+import CustomInputfield from "../ui/input";
 
 export default function Postform({ userid }: { userid: number }) {
   const [posting, setPosting] = useState(false);
@@ -55,14 +56,14 @@ export default function Postform({ userid }: { userid: number }) {
     }
   }
   return (
-    <div>
-      <div>{message}</div>
+    <form className=" border-2 border-black h-32 p-3">
+      <div className="fixed top-0 right-1">{message}</div>
       <input
-        ref={postinputRef}
         type="text"
-        placeholder="so whats on your mood?"
+        ref={postinputRef}
+        placeholder={"so whats on your mood?"}
+        className="border-hidden focus:border-hidden"
       />
-
       <Button onClick={() => Aicontent(`translate this to${language}`)}>
         {ailoader ? <Loader /> : "Translate to"}
 
@@ -88,9 +89,9 @@ export default function Postform({ userid }: { userid: number }) {
         {" "}
         {ailoader ? <Loader /> : "Fix spelling/grammar errors"}
       </Button>
-      <Button disabled={posting} onClick={Handlepost}>
+      <Button className="" disabled={posting} onClick={Handlepost}>
         {posting ? <Loader /> : "Post"}
       </Button>
-    </div>
+    </form>
   );
 }
