@@ -9,18 +9,27 @@ export default function Postform({ userid }: { userid: number }) {
   const [posting, setPosting] = useState(false);
   const userId = userid;
   const postinputRef = useRef<HTMLInputElement>(null);
-  const [message, Setmessage] = useState("");
+  const [message, setMessage] = useState("");
 
   async function Handlepost() {
     setPosting(true);
-    const postcontent = postinputRef.current?.value;
-    const response = await axios.post("/api/post/add", {
-      content: postcontent,
-      userid: userId,
-    });
-    Setmessage(response.data.message);
-    postinputRef.current.value = "";
-    setPosting(false);
+    const postcontent = postinputRef.current?.value.trim();
+    if (!postcontent) {
+      setMessage("Post cannot be empty");
+      setPosting(false);
+      return;
+    }
+    try {
+      const response = await axios.post("/api/post/add", {
+        content: postcontent,
+        userid: userId,
+      });
+      setMessage(response.data.message);
+      postinputRef.current.value = "";
+      setPosting(false);
+    } catch (error) {
+      setMessage("Failed to post. Please try again.");
+    }
   }
   return (
     <div>

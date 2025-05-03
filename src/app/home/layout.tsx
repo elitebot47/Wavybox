@@ -1,5 +1,7 @@
 import LeftSideBar from "./leftSidebar";
 import RightSideBar from "./rightSidebar";
+
+
 export default async function Homelayout({
   children,
 }: {
@@ -10,7 +12,7 @@ export default async function Homelayout({
       <aside className="hidden  md:block md:basis-1/5">
         <LeftSideBar></LeftSideBar>
       </aside>
-      <main className="flex-2/5">{children}</main>
+      <main className="flex-2/5 ">{children}</main>
       <aside className="hidden  md:block md:basis-2/5">
         <RightSideBar></RightSideBar>
       </aside>

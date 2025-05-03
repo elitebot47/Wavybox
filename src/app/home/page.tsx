@@ -6,7 +6,8 @@ import { Post as PostType } from "@prisma/client";
 
 export default async function Home() {
   const session = await auth();
-  const posts: PostType[] = await prisma.post.findMany();
+  let posts: PostType[] = await prisma.post.findMany();
+  posts = posts.reverse();
   const userid: number = session.user.id;
   return (
     <div className="flex flex-col ">
