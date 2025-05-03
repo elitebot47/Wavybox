@@ -1,13 +1,20 @@
-import NextAuth from "next-auth";
+import NextAuth, { Session, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { verifyPassword } from "./hash";
 import { prisma } from "../lib/prisma";
+import { number } from "zod";
+import { JWT } from "next-auth/jwt";
+import { UserData } from "next-auth/providers/42-school";
 
 interface Credentials {
   email: string;
   password: string;
 }
-
+interface JWT {
+  id: number;
+  email: string;
+  username: string;
+}
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     CredentialsProvider({
@@ -51,13 +58,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id?.toString();
+        token.id = user.id;
         token.email = user.email;
         token.username = user.username;
       }
       return token;
     },
-    async session({ session, token }: { session: any; token: any }) {
+    async session({ session, token }) {
       session.user.id = token.id;
       session.user.email = token.email;
       session.user.username = token.username;
