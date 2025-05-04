@@ -16,6 +16,7 @@ export default async function Home() {
         {posts.map((post) => (
           <Post
             key={post.id}
+            imageurl={post.imageUrl}
             username={session?.user.username}
             content={post.content}
             createdAt={post.createdAt.getTime()}

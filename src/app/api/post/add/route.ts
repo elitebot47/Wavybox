@@ -3,15 +3,17 @@ import { NextRequest, NextResponse } from "next/server";
 interface Postcreds {
   content: string;
   userid: number;
+  imageUrl: string;
 }
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    const { content, userid }: Postcreds = await req.json();
+    const { content, userid, imageUrl }: Postcreds = await req.json();
     console.log("now trying to create post in db");
     await prisma.post.create({
       data: {
         content,
         authorId: Number(userid),
+        imageUrl,
       },
     });
     console.log("post created in DB,wow");

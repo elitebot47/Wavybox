@@ -15,6 +15,9 @@ import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import { Image } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { CldImage } from "next-cloudinary";
 
 export default function Postform({ userid }: { userid: number }) {
   const [posting, setPosting] = useState(false);
@@ -22,6 +25,35 @@ export default function Postform({ userid }: { userid: number }) {
   const postinputRef = useRef<HTMLTextAreaElement>(null);
   const [language, setLanguage] = useState("");
   const [ailoader, setAiloader] = useState(false);
+  const [imageurl, Setimageurl] = useState(null);
+  const [imageloader, setimageloader] = useState(false);
+
+  async function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "post-preset");
+
+    try {
+      const response = await axios.post(
+        "https://api.cloudinary.com/v1_1/dl5yxidsn/image/upload",
+        formData, //
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const data = response.data;
+      Setimageurl(data);
+      console.log("Uploaded Image URL:", data.secure_url);
+    } catch (error) {
+      console.error("Upload failed", error);
+    }
+  }
 
   async function Aicontent(processtype: string) {
     setAiloader(true);
@@ -58,9 +90,11 @@ export default function Postform({ userid }: { userid: number }) {
       const response = await axios.post("/api/post/add", {
         content: postcontent,
         userid: userId,
+        imageUrl: imageurl?.secure_url,
       });
       toast.success("Post published successfully");
       postinputRef.current.value = "";
+      Setimageurl(null);
       setPosting(false);
     } catch (error) {
       toast.error("Failed to post. Please try again.");
@@ -82,13 +116,29 @@ export default function Postform({ userid }: { userid: number }) {
           placeholder="so what's on your mood?"
         />
       </div>
+      {imageurl && (
+        <CldImage
+          src={imageurl.secure_url}
+          width={200}
+          height={200}
+          alt="Description of the image"
+        ></CldImage>
+      )}
       <Separator />
 
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
-          <Button disabled={ailoader || posting} className=" ">
-            <Image size={18}></Image>
-          </Button>
+          <Label htmlFor="file-upload" style={{ cursor: "pointer" }}>
+            {imageloader ? <Loader></Loader> : <Image size={18}></Image>}
+          </Label>
+          <Input
+            id="file-upload"
+            type="file"
+            style={{ display: "none" }}
+            accept="image/*"
+            onChange={handleUpload}
+          />
+
           <Select
             disabled={ailoader || posting}
             value={language}
