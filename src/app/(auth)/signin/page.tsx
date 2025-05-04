@@ -5,6 +5,16 @@ import Link from "next/link";
 import { signIn } from "next-auth/react";
 import Loader from "@/components/ui/loader";
 import { z } from "zod";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 
 const signinSchema = z.object({
   email: z.string().min(1, "email cant be empty"),
@@ -12,11 +22,13 @@ const signinSchema = z.object({
     .string()
     .min(6, "password short!! ,should be atleast 6 character "),
 });
-export default function () {
+
+export default function LoginPage() {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
@@ -60,27 +72,66 @@ export default function () {
       setLoading(false);
     }
   }
+
   return (
-    <div className="flex flex-col">
-      <div className="">
-        <h1 className="">Login</h1>
-        {error && <div className="text-red-500">{error}</div>}
-        <form onSubmit={handleSubmit} className="">
-          <div className="flex flex-col">
-            <input ref={emailRef} type="text" placeholder="email" />
-            <input ref={passwordRef} type="password" placeholder="Password" />
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900 px-4 py-12">
+      <Card className="w-full max-w-md shadow-md">
+        <CardHeader className="space-y-1 text-center">
+          <CardTitle className="text-2xl font-bold">Login</CardTitle>
+        </CardHeader>
+
+        <CardContent>
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm rounded-md">
+              {error}
+            </div>
+          )}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-sm font-medium">
+                Email
+              </Label>
+              <Input
+                ref={emailRef}
+                id="email"
+                type="text"
+                placeholder="email"
+                className="w-full"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-sm font-medium">
+                Password
+              </Label>
+              <Input
+                ref={passwordRef}
+                id="password"
+                type="password"
+                placeholder="Password"
+                className="w-full"
+              />
+            </div>
+
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? <Loader /> : "Sign in"}
+            </Button>
+          </form>
+        </CardContent>
+
+        <CardFooter className="flex justify-center border-t p-4">
+          <div className="text-center text-sm">
+            New user?{" "}
+            <Link
+              href="/signup"
+              className="font-medium text-primary hover:underline"
+            >
+              Register
+            </Link>
           </div>
-          <button type="submit" disabled={loading}>
-            {loading ? <Loader /> : "Sign in"}
-          </button>
-        </form>
-        <div className="">
-          New user?{" "}
-          <Link href="/signup" className="text-blue-500 ">
-            Register
-          </Link>
-        </div>
-      </div>
+        </CardFooter>
+      </Card>
     </div>
   );
 }

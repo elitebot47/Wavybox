@@ -119,3 +119,10 @@
   }
 }
 
+.textarea-class {
+  border: none !important;
+}
+
+.textarea-class:focus {
+  outline: none !important;
+}
