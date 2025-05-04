@@ -17,7 +17,7 @@ export default function Post({
 }: Postprops) {
   const timeago = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col " >
       <div>
         <div>{username}</div>
         <div>{timeago}</div>
