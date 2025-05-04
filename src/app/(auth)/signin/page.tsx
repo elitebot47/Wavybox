@@ -17,7 +17,10 @@ import {
 import { Label } from "@/components/ui/label";
 
 const signinSchema = z.object({
-  email: z.string().min(1, "email cant be empty"),
+  email: z
+    .string()
+    .min(1, "email cant be empty")
+    .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid email format"),
   password: z
     .string()
     .min(6, "password short!! ,should be atleast 6 character "),

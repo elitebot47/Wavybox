@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
       },
     });
     return NextResponse.json(
-      { message: `registration succesfull` },
+      { message: `Registration succesfull ✅ ` },
       { status: 201 }
     );
   } catch (error: any) {
@@ -48,14 +48,14 @@ export async function POST(req: NextRequest) {
     if (error instanceof Prisma.PrismaClientKnownRequestError) {
       if (error.code === "P2002") {
         return NextResponse.json(
-          { message: "email already exists" },
+          { message: "Email already exists" },
           { status: 409 }
         );
       }
     }
     return NextResponse.json(
       {
-        message: "error while registration",
+        message: "Error while registration",
       },
       { status: 500 }
     );
