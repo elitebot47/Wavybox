@@ -1,14 +1,21 @@
 "use client";
 import { useRef, useState } from "react";
-import { Button } from "../ui/button";
 import axios from "axios";
 import Loader from "../ui/loader";
-import CustomInputfield from "../ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function Postform({ userid }: { userid: number }) {
   const [posting, setPosting] = useState(false);
   const userId = userid;
-  const postinputRef = useRef<HTMLInputElement>(null);
+  const postinputRef = useRef<HTMLTextAreaElement>(null);
   const [message, setMessage] = useState("");
   const [language, setLanguage] = useState("");
   const [ailoader, setAiloader] = useState(false);
@@ -56,47 +63,45 @@ export default function Postform({ userid }: { userid: number }) {
     }
   }
   return (
-    <div className=" border-2 border-black h-32 p-">
-      <div className="fixed top-0 right-1">{message}</div>
+    <div className=" border-2 border-black  p-2 flex flex-col ">
+      {/* <div className="fixed top-0 right-1">{message}</div> */}
       <div>
-        <input
-          type="text"
+        <Textarea
+          className="border-hidden focus:border-hidden hover:border-hidden"
           ref={postinputRef}
-          placeholder={"so whats on your mood?"}
-          className="border-hidden"
+          placeholder="so whats on your mood?"
         />
       </div>
-      <div className="flex">
-        <div className="flex ">
-          <Button onClick={() => Aicontent(`translate this to${language}`)}>
-            {ailoader ? <Loader /> : "Translate to"}
+      <div className="flex w-full h-full ">
+        <div className="flex   m-auto ">
+          <Select
+            value={language}
+            onValueChange={(value) => {
+              setLanguage(value);
+              Aicontent(`translate this to ${value}`);
+            }}
+          >
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Translate to" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Hindi">Hindi</SelectItem>
+              <SelectItem value="English">English</SelectItem>
+              <SelectItem value="Russian">Russian</SelectItem>
+              <SelectItem value="Chinese">Chinese</SelectItem>
+            </SelectContent>
+          </Select>
 
-            <select
-              className="text-black"
-              onChange={(e) => setLanguage(e.target.value)}
-              name="languages"
-              id="languageselect"
-            >
-              <option value="Hindi">Hindi</option>
-              <option value="English">English</option>
-              <option value="Russian">Russian</option>
-              <option value="Chinese">Chinese</option>
-              <option value="Japanese">Japanese</option>
-            </select>
-          </Button>
-          <Button onClick={() => Aicontent("summarise")}>
-            {ailoader ? <Loader /> : "Summarise"}
-          </Button>
           <Button
             onClick={() =>
               Aicontent("fix spelling and grammar errors only and dont change ")
             }
+            variant="outline"
           >
-            {" "}
             {ailoader ? <Loader /> : "Fix spelling/grammar errors"}
           </Button>
         </div>
-        <Button className="" disabled={posting} onClick={Handlepost}>
+        <Button className="h-9 m-auto" disabled={posting} onClick={Handlepost}>
           {posting ? <Loader /> : "Post"}
         </Button>
       </div>

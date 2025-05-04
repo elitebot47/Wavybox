@@ -10,7 +10,7 @@ import {
 
 export default function LeftSideBar() {
   return (
-    <div className="flex flex-col gap-2 pl-16 py-14 pr-4 ">
+    <div className="flex flex-col gap-2  py-14 pr-4 ">
       <div>
         <LsbButton icon={LucideEqualApproximately}></LsbButton>
       </div>
