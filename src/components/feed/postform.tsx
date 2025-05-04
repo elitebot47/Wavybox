@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
+import { Image } from "lucide-react";
 
 export default function Postform({ userid }: { userid: number }) {
   const [posting, setPosting] = useState(false);
@@ -70,7 +71,7 @@ export default function Postform({ userid }: { userid: number }) {
     <div className="border border-gray-200 rounded-lg p-4 flex flex-col gap-3 bg-white shadow-sm">
       <div>
         <Textarea
-          className="resize-none textarea-class p-2 text-gray-800 placeholder:text-gray-400 w-full min-h-[50px] outline-none border-none !border-0 !shadow-none focus:!ring-0 focus:!ring-offset-0 rounded-none"
+          className="   font-medium resize-none textarea-class p-2 text-gray-800 placeholder:text-gray-400 w-full min-h-[50px] outline-none border-none !border-0 !shadow-none focus:!ring-0 focus:!ring-offset-0 rounded-none"
           ref={postinputRef}
           placeholder="so what's on your mood?"
         />
@@ -79,6 +80,9 @@ export default function Postform({ userid }: { userid: number }) {
 
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
+          <Button className=" ">
+            <Image size={18}></Image>
+          </Button>
           <Select
             disabled={ailoader}
             value={language}
@@ -87,7 +91,7 @@ export default function Postform({ userid }: { userid: number }) {
               Aicontent(`translate this to ${e}`);
             }}
           >
-            <SelectTrigger className="w-[140px] h-9 bg-white border-gray-200">
+            <SelectTrigger className="w-auto h-9 bg-white  border-gray-200">
               <SelectValue placeholder="Translate to" />
             </SelectTrigger>
             <SelectContent>
@@ -104,7 +108,7 @@ export default function Postform({ userid }: { userid: number }) {
               Aicontent("fix spelling and grammar errors only and dont change")
             }
             variant="outline"
-            className="h-9 border-gray-200"
+            className="h-9 border-gray-200 w-auto"
           >
             {ailoader ? <Loader /> : "Fix spelling/grammar errors"}
           </Button>
@@ -113,7 +117,7 @@ export default function Postform({ userid }: { userid: number }) {
         <Button
           onClick={Handlepost}
           disabled={posting || ailoader}
-          className="h-9 bg-black hover:bg-gray-800 text-white"
+          className=" w-auto h-9 bg-black hover:bg-gray-800 text-white"
         >
           {posting ? <Loader /> : "Post"}
         </Button>

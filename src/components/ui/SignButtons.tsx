@@ -1,6 +1,7 @@
 "use client";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 export function SignInButton() {
   return <Link href={"/signin"}>Sign in</Link>;
@@ -8,6 +9,6 @@ export function SignInButton() {
 
 export function SignOutButton() {
   return (
-    <button onClick={() => signOut({ callbackUrl: "/signin" })}>signout</button>
+    <Button onClick={() => signOut({ callbackUrl: "/signin" })}>Signout</Button>
   );
 }

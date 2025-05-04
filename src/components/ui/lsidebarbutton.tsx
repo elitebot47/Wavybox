@@ -1,26 +1,19 @@
-// components/ui/IconButton.tsx
-import clsx from "clsx";
+import { Button } from "@/components/ui/button";
+import { LucideIcon } from "lucide-react";
 
-export default function LsbButton({
-  children,
+interface SidebarButtonProps {
+  icon?: LucideIcon;
+  label?: string;
+}
+
+export default function SidebarButton({
   icon: Icon,
-  className,
-  ...props
-}: {
-  children: React.ReactNode | null;
-  icon?: React.ElementType;
-  className?: string;
-} & React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  label,
+}: SidebarButtonProps) {
   return (
-    <button
-      className={clsx(
-        "inline-flex items-center gap-2 bg-black h-20 text-white px-4 py-2 rounded-4xl hover:bg-gray-800 transition",
-        className
-      )}
-      {...props}
-    >
+    <Button className="w-full flex items-center gap-2 p-3 bg-black h-14 rounded-full text-white  hover:bg-gray-700">
       {Icon && <Icon size={18} />}
-      {children}
-    </button>
+      {label}
+    </Button>
   );
 }
