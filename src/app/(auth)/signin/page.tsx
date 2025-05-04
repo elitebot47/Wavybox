@@ -15,6 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 
 const signinSchema = z.object({
   email: z
@@ -45,7 +46,7 @@ export default function LoginPage() {
         const errors = parsed.error.errors
           .map((error) => error.message)
           .join(", ");
-        setError(errors);
+        toast.error(errors);
         return;
       }
 
@@ -58,20 +59,21 @@ export default function LoginPage() {
 
       if (res?.error) {
         if (res.error === "CredentialsSignin") {
-          setError("Invalid email or password.");
+          toast.error("Invalid email or password.");
         } else {
-          setError("An unexpected error occurred. Please try again.");
+          toast.error("An unexpected error occurred. Please try again.");
         }
         setLoading(false);
         return;
       }
 
       if (res?.ok) {
+        toast.success("Login successful! Redirecting to the homepage...");
         window.location.href = "/home";
         setLoading(false);
       }
     } catch (error) {
-      setError("An error occurred during sign in. Please try again.");
+      toast.error("An error occurred during sign in. Please try again.");
       setLoading(false);
     }
   }
@@ -96,10 +98,11 @@ export default function LoginPage() {
                 Email
               </Label>
               <Input
+                disabled={loading}
                 ref={emailRef}
                 id="email"
                 type="text"
-                placeholder="email"
+                placeholder="eg. manish.y@gmail.com"
                 className="w-full"
               />
             </div>
@@ -109,10 +112,11 @@ export default function LoginPage() {
                 Password
               </Label>
               <Input
+                disabled={loading}
                 ref={passwordRef}
                 id="password"
                 type="password"
-                placeholder="Password"
+                placeholder="eg. 3#$fAad"
                 className="w-full"
               />
             </div>

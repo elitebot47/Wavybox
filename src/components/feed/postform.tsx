@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
 import { Image } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Postform({ userid }: { userid: number }) {
   const [posting, setPosting] = useState(false);
@@ -68,9 +69,14 @@ export default function Postform({ userid }: { userid: number }) {
   }
 
   return (
-    <div className="border border-gray-200 rounded-lg p-4 flex flex-col gap-3 bg-white shadow-sm">
+    <div className="border border-gray-200 rounded-lg p-4 flex  flex-col gap-3  bg-white shadow-sm">
       <div>
+        {ailoader && (
+          <Skeleton className="w-full min-h-[50px] max-h-full"></Skeleton>
+        )}
         <Textarea
+          disabled={ailoader || posting}
+          hidden={ailoader}
           className="   font-medium resize-none textarea-class p-2 text-gray-800 placeholder:text-gray-400 w-full min-h-[50px] outline-none border-none !border-0 !shadow-none focus:!ring-0 focus:!ring-offset-0 rounded-none"
           ref={postinputRef}
           placeholder="so what's on your mood?"
@@ -80,15 +86,17 @@ export default function Postform({ userid }: { userid: number }) {
 
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
-          <Button className=" ">
+          <Button disabled={ailoader || posting} className=" ">
             <Image size={18}></Image>
           </Button>
           <Select
-            disabled={ailoader}
+            disabled={ailoader || posting}
             value={language}
             onValueChange={(e) => {
               setLanguage(e);
-              Aicontent(`translate this to ${e}`);
+              Aicontent(
+                `language translate this to ${e} and dont give any explanation`
+              );
             }}
           >
             <SelectTrigger className="w-auto h-9 bg-white  border-gray-200">
@@ -103,14 +111,16 @@ export default function Postform({ userid }: { userid: number }) {
           </Select>
 
           <Button
-            disabled={ailoader}
+            disabled={ailoader || posting}
             onClick={() =>
-              Aicontent("fix spelling and grammar errors only and dont change")
+              Aicontent(
+                "fix spelling , grammar  errors  only and dont change and dont give any explanation,Adjust my text to follow correct capitalization rules."
+              )
             }
             variant="outline"
             className="h-9 border-gray-200 w-auto"
           >
-            {ailoader ? <Loader /> : "Fix spelling/grammar errors"}
+            Fix spelling/grammar errors
           </Button>
         </div>
 

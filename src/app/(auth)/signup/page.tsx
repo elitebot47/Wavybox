@@ -1,9 +1,8 @@
 "use client";
 import { useRef, useState } from "react";
-import { string, z } from "zod";
+import { z } from "zod";
 import axios from "axios";
 import Link from "next/link";
-import { signUp } from "next-auth/react"; // Hypothetical signup function (adjust based on backend)
 import Loader from "@/components/ui/loader";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -22,10 +21,12 @@ const signupSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 export default function SignUpPage() {
+  const [Signuploader, setSignuploader] = useState(false);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
 
   async function Sendcreds() {
+    setSignuploader(true);
     const email = emailRef.current?.value.toLowerCase() || "";
     const password = passwordRef.current?.value || "";
     const result = signupSchema.safeParse({ email, password });
@@ -34,6 +35,7 @@ export default function SignUpPage() {
         .map((error) => error.message)
         .join(", ");
       toast.error(errors);
+      setSignuploader(false);
       return;
     }
     try {
@@ -42,7 +44,9 @@ export default function SignUpPage() {
         password,
       });
       toast.message(response.data.message);
+      setSignuploader(false);
     } catch (error: any) {
+      setSignuploader(false);
       if (error.response) {
         toast.error(`${error.response.data.message}`);
       } else {
@@ -71,12 +75,14 @@ export default function SignUpPage() {
           <CardContent>
             <div className="flex flex-col gap-3">
               <Input
+                disabled={Signuploader}
                 ref={emailRef}
                 type="text"
                 placeholder="Email"
                 className="w-full border p-2 rounded-md"
               />
               <Input
+                disabled={Signuploader}
                 ref={passwordRef}
                 type="password"
                 placeholder="Password"
@@ -85,10 +91,11 @@ export default function SignUpPage() {
             </div>
 
             <Button
+              disabled={Signuploader}
               onClick={Sendcreds}
               className="mt-4 w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800"
             >
-              Signup
+              {Signuploader ? <Loader></Loader> : "Signup"}
             </Button>
           </CardContent>
 
