@@ -1,5 +1,3 @@
 export default async function Postview() {
-    return <div>
-        
-    </div>
+  return <div>postview area</div>;
 }
