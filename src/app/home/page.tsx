@@ -3,6 +3,7 @@ import Postform from "@/components/feed/postform";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Post as PostType } from "@prisma/client";
+import { Image } from "lucide-react";
 
 export default async function Home() {
   const session = await auth();
@@ -11,8 +12,16 @@ export default async function Home() {
       author: {
         select: { username: true },
       },
+      images: {
+        select: {
+          secureUrl: true,
+          publicId: true,
+        },
+      },
     },
   });
+  console.log("posts:", posts);
+
   posts = posts.reverse();
   const userid: number = session.user.id;
   return (
@@ -22,7 +31,7 @@ export default async function Home() {
         {posts.map((post) => (
           <Post
             key={post.id}
-            imageurl={post.imageUrl}
+            images={post.images}
             username={post.author.username}
             content={post.content}
             createdAt={post.createdAt.getTime()}

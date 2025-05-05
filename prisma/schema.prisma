@@ -24,6 +24,14 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   authorId  Int
-  imageUrl  String?
   author    User     @relation(fields: [authorId], references: [id])
+  images     Image[]
+}
+
+model Image {
+  id        Int    @id @default(autoincrement())
+  secureUrl String
+  publicId  String
+  postId    Int
+  post      Post   @relation(fields: [postId], references: [id])
 }

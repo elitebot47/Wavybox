@@ -37,9 +37,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         },
       }
     );
-    console.log("trying: uplading image to  cloud");
     const imageUrl = response.data.secure_url;
-    console.log(imageUrl);
 
     return NextResponse.json({
       imageUrl,
