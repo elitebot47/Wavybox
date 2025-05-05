@@ -27,16 +27,18 @@ export default function Post({
         <div>{timeago}</div>
       </div>
       <div>{content}</div>
-      <div className=" w-lg overflow-hidden bg-white border-2 rounded-4xl mx-auto ">
-        <CldImage
-          className=" mx-auto "
-          src={imageurl}
-          alt="image"
-          width={200}
-          height={200}
-          loading="lazy"
-        />
-      </div>
+      {imageurl && (
+        <div className=" w-lg overflow-hidden bg-white border-2 rounded-4xl mx-auto ">
+          <CldImage
+            className=" mx-auto "
+            src={imageurl}
+            alt="image"
+            width={200}
+            height={200}
+            loading="lazy"
+          />
+        </div>
+      )}
     </div>
   );
 }

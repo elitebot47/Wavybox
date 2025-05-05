@@ -1,10 +1,8 @@
-// components/Loader.tsx
-import { Loader2 } from "lucide-react"; // Optional: lucide-react spinner icon
+import { Loader2 } from "lucide-react";
+import { clsx } from "clsx";
 
-export default function Loader({}) {
+export default function Loader({ className }: { className?: string }) {
   return (
-    <div className="flex items-center justify-center   ">
-      <Loader2 className="animate-spin h-8 w-8 text-blue-500" />
-    </div>
+    <Loader2 className={clsx("animate-spin h-8 w-8 text-black", className)} />
   );
 }

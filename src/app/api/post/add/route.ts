@@ -24,15 +24,15 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   } catch (error: any) {
     if (error.response) {
       return NextResponse.json({
-        message: "Your post was sent" + error.response.data,
+        message: "error:" + error.response.data,
       });
     } else if (error.request) {
       return NextResponse.json({
-        message: "Your post was sent" + error.request,
+        message: "error:" + error.request,
       });
     } else {
       return NextResponse.json({
-        message: "Your post was sent" + error.message,
+        message: "error:" + error.message,
       });
     }
   }

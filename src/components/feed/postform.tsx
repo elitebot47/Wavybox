@@ -37,19 +37,16 @@ export default function Postform({ userid }: { userid: number }) {
     formData.append("upload_preset", "post-preset");
 
     try {
-      const response = await axios.post(
-        "https://api.cloudinary.com/v1_1/dl5yxidsn/image/upload",
-        formData, //
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      setimageloader(true);
+      console.log(formData);
 
-      const data = response.data;
-      Setimageurl(data);
-      console.log("Uploaded Image URL:", data.secure_url);
+      const response = await axios.post("/api/post/media", formData);
+
+      console.log("response from uplaod route:", response);
+      const imageUrl = response.data.imageUrl;
+      console.log("Uploaded Image URL:", imageUrl);
+      Setimageurl(imageUrl);
+      setimageloader(false);
     } catch (error) {
       console.error("Upload failed", error);
     }
@@ -90,7 +87,7 @@ export default function Postform({ userid }: { userid: number }) {
       const response = await axios.post("/api/post/add", {
         content: postcontent,
         userid: userId,
-        imageUrl: imageurl?.secure_url,
+        imageUrl: imageurl,
       });
       toast.success("Post published successfully");
       postinputRef.current.value = "";
@@ -111,14 +108,15 @@ export default function Postform({ userid }: { userid: number }) {
         <Textarea
           disabled={ailoader || posting}
           hidden={ailoader}
-          className="   font-medium resize-none textarea-class p-2 text-gray-800 placeholder:text-gray-400 w-full min-h-[50px] outline-none border-none !border-0 !shadow-none focus:!ring-0 focus:!ring-offset-0 rounded-none"
+          className="    resize-none !text-lg textarea-class p-2 text-gray-800 placeholder:text-gray-400 w-full min-h-[50px] outline-none border-none !border-0 !shadow-none focus:!ring-0 focus:!ring-offset-0 rounded-none"
           ref={postinputRef}
           placeholder="so what's on your mood?"
         />
       </div>
       {imageurl && (
         <CldImage
-          src={imageurl.secure_url}
+          loading="eager"
+          src={imageurl}
           width={200}
           height={200}
           alt="Description of the image"
@@ -128,13 +126,13 @@ export default function Postform({ userid }: { userid: number }) {
 
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
-          <Label htmlFor="file-upload" style={{ cursor: "pointer" }}>
+          <Label htmlFor="file-upload" className="cursor-pointer">
             {imageloader ? <Loader></Loader> : <Image size={18}></Image>}
           </Label>
           <Input
             id="file-upload"
             type="file"
-            style={{ display: "none" }}
+            className="hidden"
             accept="image/*"
             onChange={handleUpload}
           />
@@ -177,9 +175,9 @@ export default function Postform({ userid }: { userid: number }) {
         <Button
           onClick={Handlepost}
           disabled={posting || ailoader}
-          className=" w-auto h-9 bg-black hover:bg-gray-800 text-white"
+          className=" w-auto h-9 bg-black hover:bg-gray-800 text-lg    text-white"
         >
-          {posting ? <Loader /> : "Post"}
+          {posting ? <Loader className="text-white" /> : "Post"}
         </Button>
       </div>
     </div>

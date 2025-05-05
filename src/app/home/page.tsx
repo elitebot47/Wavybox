@@ -6,7 +6,13 @@ import { Post as PostType } from "@prisma/client";
 
 export default async function Home() {
   const session = await auth();
-  let posts: PostType[] = await prisma.post.findMany();
+  let posts: PostType[] = await prisma.post.findMany({
+    include: {
+      author: {
+        select: { username: true },
+      },
+    },
+  });
   posts = posts.reverse();
   const userid: number = session.user.id;
   return (
@@ -17,7 +23,7 @@ export default async function Home() {
           <Post
             key={post.id}
             imageurl={post.imageUrl}
-            username={session?.user.username}
+            username={post.author.username}
             content={post.content}
             createdAt={post.createdAt.getTime()}
             userId={userid}
