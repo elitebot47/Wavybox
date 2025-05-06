@@ -1,20 +1,8 @@
 "use client";
 
 import { formatDistanceToNow } from "date-fns";
-import { CldImage } from "next-cloudinary";
 import Imagespace from "./imagespace";
-interface postImage {
-  secureUrl: string;
-  publicId: string;
-}
-interface Postprops {
-  username: string;
-  content: string;
-  name?: string;
-  createdAt: string;
-  userId: number;
-  images: postImage[];
-}
+import { UserPost } from "@/types";
 
 export default function Post({
   username,
@@ -23,7 +11,7 @@ export default function Post({
   createdAt,
   userId,
   images,
-}: Postprops) {
+}: UserPost) {
   const timeago = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
   return (
     <div className="flex flex-col ">

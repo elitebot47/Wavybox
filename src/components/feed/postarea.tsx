@@ -1,9 +1,14 @@
 "use client";
+import { UserPost } from "@/types";
 import Post from "./post";
-import { motion } from "framer-motion";
-
-interface Postprops {}
-export default function PostArea({ posts, userid }: { userid: number }) {
+import { postImage } from "@/types";
+export default function PostArea({
+  posts,
+  userid,
+}: {
+  posts: UserPost<postImage>[];
+  userid: number;
+}) {
   return (
     <div className=" p-4 flex flex-col gap-3   overflow-hidden">
       {posts.map((post) => (
