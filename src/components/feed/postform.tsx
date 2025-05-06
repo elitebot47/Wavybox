@@ -98,6 +98,7 @@ export default function Postform({ userid }: { userid: number }) {
         images: imagesArray,
       });
       toast.success("Post published successfully");
+
       postinputRef.current.value = "";
       setimagesArray([]);
       setPosting(false);
@@ -135,8 +136,11 @@ export default function Postform({ userid }: { userid: number }) {
                 height={200}
                 loading="eager"
               ></CldImage>
+              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
               <div className="absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 transition-opacity  duration-200">
                 <button
+                  className="text-white"
                   title="Remove"
                   onClick={async () => {
                     setimagesArray((prev) =>
@@ -158,17 +162,24 @@ export default function Postform({ userid }: { userid: number }) {
 
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
-          <Label htmlFor="file-upload" className="cursor-pointer">
-            {imageloader ? <Loader></Loader> : <Image size={18}></Image>}
-          </Label>
-          <Input
-            id="file-upload"
-            type="file"
-            className="hidden"
-            accept="image/*"
-            multiple
-            onChange={handleUpload}
-          />
+          <Button
+            asChild
+            size="icon"
+            className="text-black hover:bg-gray-200 bg-white border-2  border-gray-200"
+            disabled={imageloader}
+          >
+            <Label htmlFor="file-upload" className="cursor-pointer">
+              {imageloader ? <Loader></Loader> : <Image size={18}></Image>}
+              <Input
+                id="file-upload"
+                type="file"
+                className="hidden"
+                accept="image/*"
+                multiple
+                onChange={handleUpload}
+              />
+            </Label>
+          </Button>
 
           <Select
             disabled={ailoader || posting}
