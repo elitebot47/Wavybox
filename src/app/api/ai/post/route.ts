@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Together from "together-ai";
 
 const together = new Together({
-  apiKey: "b2127528627007d6903a73c055278bcbb93321a57907b54b000119354341eeac",
+  apiKey: process.env.TOGETHER_API,
 });
 export async function POST(req: NextRequest) {
   //   await together.chat.completions.create({
