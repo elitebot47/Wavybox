@@ -18,7 +18,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { CldImage } from "next-cloudinary";
-import { url } from "inspector";
 
 export default function Postform({ userid }: { userid: number }) {
   const [posting, setPosting] = useState(false);
@@ -34,6 +33,10 @@ export default function Postform({ userid }: { userid: number }) {
     public_id: string;
   }
   async function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
+    if (imagesArray.length >= 4) {
+      toast.error("Max upload allowed:4");
+      return;
+    }
     const files = event.target.files;
     if (!files || files.length === 0) return;
     const uploadedimages: Array<imageData> = [];
@@ -51,6 +54,8 @@ export default function Postform({ userid }: { userid: number }) {
       }
     }
     setimagesArray((prev) => [...prev, ...uploadedimages]);
+    console.log("imagesArray: " + imagesArray);
+
     setimageloader(false);
   }
 
@@ -86,14 +91,14 @@ export default function Postform({ userid }: { userid: number }) {
     }
 
     try {
-      const response = await axios.post("/api/post/add", {
+      await axios.post("/api/post/add", {
         content: postcontent,
         userid: userId,
-        images: imageurl,
+        images: imagesArray,
       });
       toast.success("Post published successfully");
       postinputRef.current.value = "";
-      Setimageurl(null);
+      setimagesArray([]);
       setPosting(false);
     } catch (error) {
       toast.error("Failed to post. Please try again.");
@@ -122,6 +127,8 @@ export default function Postform({ userid }: { userid: number }) {
               src={image.url}
               key={image.public_id}
               alt={image.public_id}
+              width={200}
+              height={200}
               loading="eager"
             ></CldImage>
           ))}

@@ -3,7 +3,6 @@ import Postform from "@/components/feed/postform";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Post as PostType } from "@prisma/client";
-import { Image } from "lucide-react";
 
 export default async function Home() {
   const session = await auth();

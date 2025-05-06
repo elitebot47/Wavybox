@@ -1,4 +1,5 @@
 import axios from "axios";
+import { url } from "inspector";
 import { NextRequest, NextResponse } from "next/server";
 
 export const config = {
@@ -37,10 +38,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         },
       }
     );
-    const imageUrl = response.data.secure_url;
 
     return NextResponse.json({
-      imageUrl,
+      secureUrl: response.data.secure_url,
+      public_id: response.data.public_id,
     });
   } catch (error: any) {
     if (error.response) {

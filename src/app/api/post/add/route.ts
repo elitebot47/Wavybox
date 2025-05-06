@@ -1,19 +1,29 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-interface Postcreds {
+interface CloudinaryImage {
+  url: string;
+  public_id: string;
+}
+
+interface PostCreds {
   content: string;
   userid: number;
-  imageUrl: string;
+  images: CloudinaryImage[];
 }
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    const { content, userid, imageUrl }: Postcreds = await req.json();
+    const { content, userid, images }: PostCreds = await req.json();
     console.log("now trying to create post in db");
     await prisma.post.create({
       data: {
         content,
         authorId: Number(userid),
-        imageUrl,
+        images: {
+          create: images.map((img) => ({
+            secureUrl: img.url,
+            publicId: img.public_id,
+          })),
+        },
       },
     });
     console.log("post created in DB,wow");
