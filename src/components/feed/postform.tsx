@@ -13,11 +13,12 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
-import { Image } from "lucide-react";
+import { CircleX, Image } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { CldImage } from "next-cloudinary";
+import { cloudinary } from "@/lib/cloudinary";
 
 export default function Postform({ userid }: { userid: number }) {
   const [posting, setPosting] = useState(false);
@@ -33,12 +34,13 @@ export default function Postform({ userid }: { userid: number }) {
     public_id: string;
   }
   async function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
-    if (imagesArray.length >= 4) {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+    if (!files || files.length >= 5) {
       toast.error("Max upload allowed:4");
       return;
     }
-    const files = event.target.files;
-    if (!files || files.length === 0) return;
+
     const uploadedimages: Array<imageData> = [];
     setimageloader(true);
     const formData = new FormData();
@@ -54,7 +56,6 @@ export default function Postform({ userid }: { userid: number }) {
       }
     }
     setimagesArray((prev) => [...prev, ...uploadedimages]);
-    console.log("imagesArray: " + imagesArray);
 
     setimageloader(false);
   }
@@ -121,16 +122,35 @@ export default function Postform({ userid }: { userid: number }) {
         />
       </div>
       {imagesArray && (
-        <div className="flex flex-wrap">
+        <div className="flex flex-wrap ">
           {imagesArray.map((image) => (
-            <CldImage
-              src={image.url}
+            <div
+              className="relative group rounded-lg overflow-hidden"
               key={image.public_id}
-              alt={image.public_id}
-              width={200}
-              height={200}
-              loading="eager"
-            ></CldImage>
+            >
+              <CldImage
+                src={image.url}
+                alt={image.public_id}
+                width={200}
+                height={200}
+                loading="eager"
+              ></CldImage>
+              <div className="absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 transition-opacity  duration-200">
+                <button
+                  title="Remove"
+                  onClick={async () => {
+                    setimagesArray((prev) =>
+                      prev.filter((img) => img.public_id != image.public_id)
+                    );
+                    await axios.delete(
+                      `/api/post/media?publicId=${image.public_id}`
+                    );
+                  }}
+                >
+                  <CircleX size={29}></CircleX>
+                </button>
+              </div>
+            </div>
           ))}
         </div>
       )}

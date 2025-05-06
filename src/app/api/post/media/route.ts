@@ -1,7 +1,7 @@
 import axios from "axios";
-import { url } from "inspector";
 import { NextRequest, NextResponse } from "next/server";
-
+import { cloudinary } from "@/lib/cloudinary";
+import { error } from "console";
 export const config = {
   api: {
     bodyParser: false, // Disallow body parsing, consume as stream
@@ -58,4 +58,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       });
     }
   }
+}
+export async function DELETE(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const public_id = searchParams.get("publicId");
+  if (!public_id) {
+    return NextResponse.json({
+      error: "publicID is null",
+    });
+  }
+  await cloudinary.uploader.destroy(public_id, {
+    invalidate: true, // Optional: Invalidate CDN cached versions
+  });
+  return NextResponse.json({
+    message: "success",
+  });
 }

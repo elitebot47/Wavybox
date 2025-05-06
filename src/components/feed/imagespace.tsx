@@ -22,7 +22,7 @@ export default function Imagespace({ images }: ImageGridProps) {
       className={`grid ${getGridCols()} gap-1 rounded-xl overflow-hidden max-w-[512px] mx-auto`}
     >
       {images.slice(0, 4).map((image) => (
-        <div key={image.publicId} className="relative aspect-[4/3]">
+        <div key={image.publicId} className="relative aspect-[4/3] " >
           <CldImage
             src={image.secureUrl}
             alt={image.publicId}
