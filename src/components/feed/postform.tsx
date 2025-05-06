@@ -18,6 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { CldImage } from "next-cloudinary";
+import { url } from "inspector";
 
 export default function Postform({ userid }: { userid: number }) {
   const [posting, setPosting] = useState(false);
@@ -25,31 +26,32 @@ export default function Postform({ userid }: { userid: number }) {
   const postinputRef = useRef<HTMLTextAreaElement>(null);
   const [language, setLanguage] = useState("");
   const [ailoader, setAiloader] = useState(false);
-  const [imageurl, Setimageurl] = useState(null);
   const [imageloader, setimageloader] = useState(false);
+  const [imagesArray, setimagesArray] = useState<imageData[]>([]);
 
+  interface imageData {
+    url: string;
+    public_id: string;
+  }
   async function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+    const uploadedimages: Array<imageData> = [];
+    setimageloader(true);
     const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "post-preset");
-
-    try {
-      setimageloader(true);
-      console.log(formData);
-
-      const response = await axios.post("/api/post/media", formData);
-
-      console.log("response from uplaod route:", response);
-      const imageUrl = response.data.imageUrl;
-      console.log("Uploaded Image URL:", imageUrl);
-      Setimageurl(imageUrl);
-      setimageloader(false);
-    } catch (error) {
-      console.error("Upload failed", error);
+    for (let i = 0; i < files.length; i++) {
+      formData.append("file", files[i]);
+      formData.append("upload_preset", "post-preset");
+      try {
+        const response = await axios.post("/api/post/media", formData);
+        const { secureUrl, public_id } = response.data;
+        uploadedimages.push({ url: secureUrl, public_id });
+      } catch (error) {
+        console.error("Upload failed", error);
+      }
     }
+    setimagesArray((prev) => [...prev, ...uploadedimages]);
+    setimageloader(false);
   }
 
   async function Aicontent(processtype: string) {
@@ -87,7 +89,7 @@ export default function Postform({ userid }: { userid: number }) {
       const response = await axios.post("/api/post/add", {
         content: postcontent,
         userid: userId,
-        imageUrl: imageurl,
+        images: imageurl,
       });
       toast.success("Post published successfully");
       postinputRef.current.value = "";
@@ -113,14 +115,17 @@ export default function Postform({ userid }: { userid: number }) {
           placeholder="so what's on your mood?"
         />
       </div>
-      {imageurl && (
-        <CldImage
-          loading="eager"
-          src={imageurl}
-          width={200}
-          height={200}
-          alt="Description of the image"
-        ></CldImage>
+      {imagesArray && (
+        <div className="flex flex-wrap">
+          {imagesArray.map((image) => (
+            <CldImage
+              src={image.url}
+              key={image.public_id}
+              alt={image.public_id}
+              loading="eager"
+            ></CldImage>
+          ))}
+        </div>
       )}
       <Separator />
 
@@ -134,6 +139,7 @@ export default function Postform({ userid }: { userid: number }) {
             type="file"
             className="hidden"
             accept="image/*"
+            multiple
             onChange={handleUpload}
           />
 
@@ -152,9 +158,11 @@ export default function Postform({ userid }: { userid: number }) {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="Hindi">Hindi</SelectItem>
+              <SelectItem value="Hinglish">Hinglish</SelectItem>
               <SelectItem value="English">English</SelectItem>
               <SelectItem value="Russian">Russian</SelectItem>
               <SelectItem value="Chinese">Chinese</SelectItem>
+              <SelectItem value="Japanese">Japanese</SelectItem>
             </SelectContent>
           </Select>
 
