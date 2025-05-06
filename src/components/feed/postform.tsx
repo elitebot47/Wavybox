@@ -1,5 +1,5 @@
 "use client";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import axios from "axios";
 import Loader from "../ui/loader";
 import {
@@ -18,25 +18,25 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { CldImage } from "next-cloudinary";
-import { cloudinary } from "@/lib/cloudinary";
+import { motion } from "framer-motion";
+interface imageData {
+  url: string;
+  public_id: string;
+}
 
 export default function Postform({ userid }: { userid: number }) {
   const [posting, setPosting] = useState(false);
   const userId = userid;
-  const postinputRef = useRef<HTMLTextAreaElement>(null);
+  const [postTextcontent, setpostTextcontent] = useState("");
   const [language, setLanguage] = useState("");
   const [ailoader, setAiloader] = useState(false);
   const [imageloader, setimageloader] = useState(false);
   const [imagesArray, setimagesArray] = useState<imageData[]>([]);
 
-  interface imageData {
-    url: string;
-    public_id: string;
-  }
   async function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const files = event.target.files;
     if (!files || files.length === 0) return;
-    if (!files || files.length >= 5) {
+    if (((!files || files.length) | imagesArray.length) >= 5) {
       toast.error("Max upload allowed:4");
       return;
     }
@@ -62,7 +62,7 @@ export default function Postform({ userid }: { userid: number }) {
 
   async function Aicontent(processtype: string) {
     setAiloader(true);
-    const postcontent = postinputRef.current?.value.trim();
+    const postcontent = postTextcontent.trim();
     if (!postcontent) {
       toast.error("Post cannot be empty");
       setAiloader(false);
@@ -74,7 +74,7 @@ export default function Postform({ userid }: { userid: number }) {
         postcontent,
         processtype,
       });
-      postinputRef.current.value = aiResult.data.message;
+      setpostTextcontent(aiResult.data.message);
       setAiloader(false);
     } catch (error) {
       toast.error("AI features not currently available");
@@ -84,8 +84,8 @@ export default function Postform({ userid }: { userid: number }) {
 
   async function Handlepost() {
     setPosting(true);
-    const postcontent = postinputRef.current?.value;
-    if (!postcontent) {
+
+    if (!postTextcontent && !imagesArray) {
       toast.error("Post cannot be empty");
       setPosting(false);
       return;
@@ -93,13 +93,12 @@ export default function Postform({ userid }: { userid: number }) {
 
     try {
       await axios.post("/api/post/add", {
-        content: postcontent,
+        content: postTextcontent,
         userid: userId,
         images: imagesArray,
       });
       toast.success("Post published successfully");
-
-      postinputRef.current.value = "";
+      setpostTextcontent("");
       setimagesArray([]);
       setPosting(false);
     } catch (error) {
@@ -109,16 +108,23 @@ export default function Postform({ userid }: { userid: number }) {
   }
 
   return (
-    <div className="border border-gray-200 rounded-lg p-4 flex  flex-col gap-3  bg-white shadow-sm">
+    <motion.div
+      layout
+      transition={{ layout: { duration: 0.5, ease: "easeOut" } }}
+      className="border border-gray-200 rounded-lg p-4 flex flex-col gap-3 bg-white shadow-sm overflow-hidden"
+    >
       <div>
         {ailoader && (
           <Skeleton className="w-full min-h-[50px] max-h-full"></Skeleton>
         )}
+
         <Textarea
+          value={postTextcontent}
           disabled={ailoader || posting}
           hidden={ailoader}
           className="    resize-none !text-lg textarea-class p-2 text-gray-800 placeholder:text-gray-400 w-full min-h-[50px] outline-none border-none !border-0 !shadow-none focus:!ring-0 focus:!ring-offset-0 rounded-none"
-          ref={postinputRef}
+          onChange={(e) => setpostTextcontent(e.target.value)}
+          // ref={postinputRef}
           placeholder="so what's on your mood?"
         />
       </div>
@@ -159,7 +165,6 @@ export default function Postform({ userid }: { userid: number }) {
         </div>
       )}
       <Separator />
-
       <div className="flex items-center justify-between">
         <div className="flex gap-2">
           <Button
@@ -169,7 +174,7 @@ export default function Postform({ userid }: { userid: number }) {
             disabled={imageloader}
           >
             <Label htmlFor="file-upload" className="cursor-pointer">
-              {imageloader ? <Loader></Loader> : <Image size={18}></Image>}
+              {imageloader ? <Loader></Loader> : <Image></Image>}
               <Input
                 id="file-upload"
                 type="file"
@@ -208,13 +213,13 @@ export default function Postform({ userid }: { userid: number }) {
             disabled={ailoader || posting}
             onClick={() =>
               Aicontent(
-                "fix spelling , grammar  errors  only and dont change and dont give any explanation,Adjust my text to follow correct capitalization rules."
+                "fix spelling , grammar  errors  ,dont give any post explantion after giving result ,Adjust my text to follow correct capitalization rules."
               )
             }
             variant="outline"
             className="h-9 border-gray-200 w-auto"
           >
-            Fix spelling/grammar errors
+            Improve Writing
           </Button>
         </div>
 
@@ -226,6 +231,6 @@ export default function Postform({ userid }: { userid: number }) {
           {posting ? <Loader className="text-white" /> : "Post"}
         </Button>
       </div>
-    </div>
+    </motion.div>
   );
 }
