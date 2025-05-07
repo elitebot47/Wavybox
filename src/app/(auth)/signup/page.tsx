@@ -27,6 +27,8 @@ export default function SignUpPage() {
 
   async function Sendcreds() {
     setSignuploader(true);
+    const formattedEmail = email.toLowerCase().trim();
+    setEmail(formattedEmail);
     const result = signupSchema.safeParse({ email, password });
     if (!result.success) {
       const errors = result.error.errors
