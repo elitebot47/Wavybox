@@ -19,6 +19,9 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { CldImage } from "next-cloudinary";
 import { motion } from "framer-motion";
+import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+
 interface imageData {
   url: string;
   public_id: string;
@@ -222,7 +225,18 @@ export default function Postform({ userid }: { userid: number }) {
             Improve Writing
           </Button>
         </div>
-
+        <CircularProgressbar
+          styles={buildStyles({
+            pathColor: "black", // Tailwind's blue-700
+            trailColor: "#e5e7eb", // Tailwind's gray-200
+          })}
+          strokeWidth={20}
+          className="text-black w-5 h-5"
+          value={postTextcontent.length}
+          maxValue={100}
+          minValue={0}
+        />
+        ;
         <Button
           onClick={Handlepost}
           disabled={posting || ailoader || imageloader}

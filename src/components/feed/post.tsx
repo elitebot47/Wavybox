@@ -32,7 +32,7 @@ export default function Post({
   const timeago = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
 
   return (
-    <Card className="w-full max-w-2xl mx-auto rounded-none">
+    <Card className="w-full max-w-2xl pb-1 pt-1 mx-auto rounded-none">
       <CardHeader className="flex flex-row gap-3 items-start">
         {/* <Avatar>
           <AvatarImage src={`/avatars /${userId}.jpg`} />
