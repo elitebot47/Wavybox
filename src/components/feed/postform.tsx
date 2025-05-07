@@ -111,7 +111,7 @@ export default function Postform({ userid }: { userid: number }) {
     <motion.div
       layout
       transition={{ layout: { duration: 0.5, ease: "easeOut" } }}
-      className="border border-gray-200  p-4 flex flex-col gap-3 bg-white shadow-sm overflow-hidden"
+      className="border border-t-0 border-gray-200  p-4 flex flex-col gap-3 bg-white shadow-sm overflow-hidden"
     >
       <div>
         {ailoader && (
@@ -170,7 +170,7 @@ export default function Postform({ userid }: { userid: number }) {
             asChild
             size="icon"
             className="text-black hover:bg-gray-200 bg-white border-2  border-gray-200"
-            disabled={imageloader}
+            disabled={imageloader || posting}
           >
             <Label htmlFor="file-upload" className="cursor-pointer">
               {imageloader ? <Loader></Loader> : <Image></Image>}

@@ -2,10 +2,10 @@ import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
 export default async function middleware(req: NextRequest) {
-  const excludedPath = ["/landpage", "/signin", "/signout"];
+  const unprotectedPath = ["/landpage", "/signin", "/signout"];
   const url = req.nextUrl.pathname;
 
-  if (excludedPath.includes(url)) {
+  if (unprotectedPath.includes(url)) {
     return NextResponse.next();
   }
 

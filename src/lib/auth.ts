@@ -1,10 +1,7 @@
-import NextAuth, { Session, User } from "next-auth";
+import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { verifyPassword } from "./hash";
 import { prisma } from "../lib/prisma";
-import { number } from "zod";
-import { JWT } from "next-auth/jwt";
-import { UserData } from "next-auth/providers/42-school";
 
 interface Credentials {
   email: string;
