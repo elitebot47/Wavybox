@@ -111,7 +111,7 @@ export default function Postform({ userid }: { userid: number }) {
     <motion.div
       layout
       transition={{ layout: { duration: 0.5, ease: "easeOut" } }}
-      className="border border-gray-200 rounded-lg p-4 flex flex-col gap-3 bg-white shadow-sm overflow-hidden"
+      className="border border-gray-200  p-4 flex flex-col gap-3 bg-white shadow-sm overflow-hidden"
     >
       <div>
         {ailoader && (

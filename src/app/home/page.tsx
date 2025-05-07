@@ -1,4 +1,3 @@
-import Post from "@/components/feed/post";
 import PostArea from "@/components/feed/postarea";
 import Postform from "@/components/feed/postform";
 import { Separator } from "@/components/ui/separator";
@@ -30,9 +29,8 @@ export default async function Home() {
   posts = posts.reverse();
   const userid: number = session.user.id;
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col  ">
       <Postform userid={userid}></Postform>
-      <Separator className="my-2"></Separator>
       <PostArea userid={userid} posts={posts}></PostArea>
     </div>
   );

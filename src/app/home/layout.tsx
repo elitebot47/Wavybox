@@ -15,14 +15,14 @@ export default async function Homelayout({
       <div>
         <Separator
           orientation="vertical"
-          className="hidden md:block w-px h-auto mx-2"
+          className="hidden md:block w-px h-auto "
         ></Separator>
       </div>
-      <main className="flex-3/7 px-3 justify-center py-4 ">{children}</main>
+      <main className="flex-3/7  justify-center    ">{children}</main>
       <div>
         <Separator
           orientation="vertical"
-          className="hidden md:block w-px h-auto mx-2"
+          className="hidden md:block w-px h-auto "
         ></Separator>
       </div>
       <aside className="hidden  md:block md:basis-2/7">

@@ -1,7 +1,8 @@
 "use client";
-import { UserPost } from "@/types";
+import { UserPost, postImage } from "@/types";
 import Post from "./post";
-import { postImage } from "@/types";
+import { motion } from "framer-motion";
+
 export default function PostArea({
   posts,
   userid,
@@ -10,7 +11,11 @@ export default function PostArea({
   userid: number;
 }) {
   return (
-    <div className=" p-4 flex flex-col gap-3   overflow-hidden">
+    <motion.div
+      layout
+      transition={{ layout: { duration: 0.5, ease: "easeOut" } }}
+      className=" flex flex-col    overflow-hidden border-t-0"
+    >
       {posts.map((post) => (
         <Post
           key={post.id}
@@ -21,6 +26,6 @@ export default function PostArea({
           userId={userid}
         />
       ))}
-    </div>
+    </motion.div>
   );
 }
