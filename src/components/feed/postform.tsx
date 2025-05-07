@@ -124,7 +124,6 @@ export default function Postform({ userid }: { userid: number }) {
           hidden={ailoader}
           className="    resize-none !text-lg textarea-class p-2 text-gray-800 placeholder:text-gray-400 w-full min-h-[50px] outline-none border-none !border-0 !shadow-none focus:!ring-0 focus:!ring-offset-0 rounded-none"
           onChange={(e) => setpostTextcontent(e.target.value)}
-          // ref={postinputRef}
           placeholder="so what's on your mood?"
         />
       </div>
@@ -176,6 +175,7 @@ export default function Postform({ userid }: { userid: number }) {
             <Label htmlFor="file-upload" className="cursor-pointer">
               {imageloader ? <Loader></Loader> : <Image></Image>}
               <Input
+                disabled={imageloader}
                 id="file-upload"
                 type="file"
                 className="hidden"
@@ -225,7 +225,7 @@ export default function Postform({ userid }: { userid: number }) {
 
         <Button
           onClick={Handlepost}
-          disabled={posting || ailoader}
+          disabled={posting || ailoader || imageloader}
           className=" w-auto h-9 bg-black hover:bg-gray-800 text-lg    text-white"
         >
           {posting ? <Loader className="text-white" /> : "Post"}

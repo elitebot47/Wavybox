@@ -3,7 +3,7 @@
 import { formatDistanceToNow } from "date-fns";
 import Imagespace from "./imagespace";
 import { UserPost } from "@/types";
-
+import { Separator } from "../ui/separator";
 export default function Post({
   username,
   content,

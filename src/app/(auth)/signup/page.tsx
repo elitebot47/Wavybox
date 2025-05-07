@@ -22,13 +22,11 @@ const signupSchema = z.object({
 });
 export default function SignUpPage() {
   const [Signuploader, setSignuploader] = useState(false);
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   async function Sendcreds() {
     setSignuploader(true);
-    const email = emailRef.current?.value.toLowerCase() || "";
-    const password = passwordRef.current?.value || "";
     const result = signupSchema.safeParse({ email, password });
     if (!result.success) {
       const errors = result.error.errors
@@ -76,14 +74,16 @@ export default function SignUpPage() {
             <div className="flex flex-col gap-3">
               <Input
                 disabled={Signuploader}
-                ref={emailRef}
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
                 type="text"
                 placeholder="Email"
                 className="w-full border p-2 rounded-md"
               />
               <Input
                 disabled={Signuploader}
-                ref={passwordRef}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 type="password"
                 placeholder="Password"
                 className="w-full border p-2 rounded-md"
@@ -95,7 +95,11 @@ export default function SignUpPage() {
               onClick={Sendcreds}
               className="mt-4 w-full bg-black text-white py-2 px-4 rounded-md hover:bg-gray-800"
             >
-              {Signuploader ? <Loader></Loader> : "Signup"}
+              {Signuploader ? (
+                <Loader className="text-white"></Loader>
+              ) : (
+                "Signup"
+              )}
             </Button>
           </CardContent>
 

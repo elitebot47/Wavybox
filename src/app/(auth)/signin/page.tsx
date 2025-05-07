@@ -28,17 +28,14 @@ const signinSchema = z.object({
 });
 
 export default function LoginPage() {
-  const emailRef = useRef<HTMLInputElement>(null);
-  const passwordRef = useRef<HTMLInputElement>(null);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
-
-    const email = emailRef.current?.value || "";
-    const password = passwordRef.current?.value || "";
 
     try {
       const parsed = signinSchema.safeParse({ email, password });
@@ -99,11 +96,12 @@ export default function LoginPage() {
               </Label>
               <Input
                 disabled={loading}
-                ref={emailRef}
+                value={email}
                 id="email"
                 type="text"
                 placeholder="eg. manish.y@gmail.com"
                 className="w-full"
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
@@ -113,11 +111,12 @@ export default function LoginPage() {
               </Label>
               <Input
                 disabled={loading}
-                ref={passwordRef}
+                value={password}
                 id="password"
                 type="password"
                 placeholder="eg. 3#$fAad"
                 className="w-full"
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
 
