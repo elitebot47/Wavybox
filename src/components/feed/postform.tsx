@@ -237,7 +237,7 @@ export default function Postform({ userid }: { userid: number }) {
           maxValue={150}
           minValue={0}
         />
-        ;
+
         <Button
           onClick={Handlepost}
           disabled={posting || ailoader || imageloader}
