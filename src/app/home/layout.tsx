@@ -18,7 +18,7 @@ export default async function Homelayout({
           className="hidden md:block w-px h-auto "
         ></Separator>
       </div>
-      <main className="flex-3/7  justify-center   ">{children}</main>
+      <main className="flex-3/7   justify-center   ">{children}</main>
       <div>
         <Separator
           orientation="vertical"

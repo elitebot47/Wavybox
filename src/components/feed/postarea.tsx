@@ -10,6 +10,7 @@ export default function PostArea({
   posts: UserPost<postImage>[];
   userid: number;
 }) {
+  
   return (
     <motion.div
       layout

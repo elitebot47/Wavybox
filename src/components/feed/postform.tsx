@@ -122,10 +122,11 @@ export default function Postform({ userid }: { userid: number }) {
         )}
 
         <Textarea
+          maxLength={150}
           value={postTextcontent}
           disabled={ailoader || posting}
           hidden={ailoader}
-          className="    resize-none !text-lg textarea-class p-2 text-gray-800 placeholder:text-gray-400 w-full min-h-[50px] outline-none border-none !border-0 !shadow-none focus:!ring-0 focus:!ring-offset-0 rounded-none"
+          className=" whitespace-pre-wrap   resize-none !text-lg textarea-class p-2 text-gray-800 placeholder:text-gray-400 w-full min-h-[50px] outline-none border-none !border-0 !shadow-none focus:!ring-0 focus:!ring-offset-0 rounded-none"
           onChange={(e) => setpostTextcontent(e.target.value)}
           placeholder="so what's on your mood?"
         />
@@ -233,7 +234,7 @@ export default function Postform({ userid }: { userid: number }) {
           strokeWidth={20}
           className="text-black w-5 h-5"
           value={postTextcontent.length}
-          maxValue={100}
+          maxValue={150}
           minValue={0}
         />
         ;
