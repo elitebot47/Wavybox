@@ -1,7 +1,9 @@
 import { Button } from "./button";
 import { LucideIcon } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { ComponentProps } from "react";
 
-interface SidebarButtonProps {
+interface SidebarButtonProps extends ComponentProps<typeof Button> {
   icon?: LucideIcon;
   label?: string;
 }
@@ -9,10 +11,18 @@ interface SidebarButtonProps {
 export default function SidebarButton({
   icon: Icon,
   label,
+  className,
+  ...props
 }: SidebarButtonProps) {
   return (
-    <Button className="w-full flex items-center gap-2 p-3 bg-black h-14 rounded-full text-white  hover:bg-gray-700">
-      {Icon && <Icon size={18} />}
+    <Button
+      className={cn(
+        "w-[200px] flex justify-start gap-2 text-lg p-3 items-center h-16 rounded-full hover:bg-black hover:text-white transition-all duration-300 border-black shadow-gray-400 bg-white text-black",
+        className
+      )}
+      {...props}
+    >
+      {Icon && <Icon size={35} />}
       {label}
     </Button>
   );

@@ -1,5 +1,6 @@
 import RightSideBar from "./rightSidebar";
 import LeftSideBar from "./leftSidebar";
+// HomeLayout.tsx
 export default function HomeLayout({
   children,
 }: {
@@ -8,7 +9,7 @@ export default function HomeLayout({
   return (
     <div className="flex justify-center w-full px-4 md:px-8">
       {/* Left Sidebar */}
-      <aside className="hidden lg:block lg:w-[250px] sticky top-0 h-screen">
+      <aside className="hidden lg:flex lg:items-center lg:justify-center lg:w-[250px] sticky top-0 h-screen">
         <LeftSideBar />
       </aside>
 

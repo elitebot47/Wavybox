@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import SidebarButton from "@/components/ui/lsidebarbutton";
 import {
   BellIcon,
@@ -8,22 +7,19 @@ import {
   MessageCircleDashed,
   WavesIcon,
 } from "lucide-react";
-
 export default function LeftSideBar() {
   return (
-    <div className="flex flex-col gap-2  py-14 pr-4 m-auto h-full ">
-      <div>
-        <SidebarButton icon={WavesIcon}></SidebarButton>
-      </div>
-      <SidebarButton icon={LucideHome} label="Home"></SidebarButton>
-      <SidebarButton icon={LucideHash} label="Explore"></SidebarButton>
-      <SidebarButton icon={BellIcon} label="Notifications"></SidebarButton>
+    <div className="flex flex-col items-center justify-center gap-2 h-full">
+      <SidebarButton icon={WavesIcon} />
+      <SidebarButton icon={LucideHome} label="Home" />
+      <SidebarButton icon={LucideHash} label="Explore" />
+      <SidebarButton icon={BellIcon} label="Notifications" />
+      <SidebarButton icon={MessageCircleDashed} label="Messages" />
+      <SidebarButton icon={LucideSettings2} label="Settings" />
       <SidebarButton
-        icon={MessageCircleDashed}
-        label="Messages"
-      ></SidebarButton>
-      <SidebarButton icon={LucideSettings2} label="Settings"></SidebarButton>
-      <SidebarButton label="Post"></SidebarButton>
+        className="justify-center bg-black text-white"
+        label="Post"
+      />
     </div>
   );
 }
