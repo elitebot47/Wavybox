@@ -27,7 +27,13 @@ interface imageData {
   public_id: string;
 }
 
-export default function Postform({ userid }: { userid: number }) {
+export default function Postform({
+  userid,
+  className,
+}: {
+  userid: number;
+  className?: string;
+}) {
   const [posting, setPosting] = useState(false);
   const userId = userid;
   const [postTextcontent, setpostTextcontent] = useState("");
@@ -88,7 +94,7 @@ export default function Postform({ userid }: { userid: number }) {
   async function Handlepost() {
     setPosting(true);
 
-    if (!postTextcontent && !imagesArray) {
+    if (!postTextcontent.trim() && imagesArray.length === 0) {
       toast.error("Post cannot be empty");
       setPosting(false);
       return;
@@ -114,7 +120,9 @@ export default function Postform({ userid }: { userid: number }) {
     <motion.div
       layout
       transition={{ layout: { duration: 0.5, ease: "easeOut" } }}
-      className="border border-t-0 border-gray-200  p-4 flex flex-col gap-3 bg-white shadow-sm overflow-hidden"
+      className={`border   shadow-none border-t-0 border-gray-200 p-4 flex flex-col gap-3 bg-white  overflow-hidden ${
+        className ?? ""
+      }`}
     >
       <div>
         {ailoader && (
@@ -228,8 +236,8 @@ export default function Postform({ userid }: { userid: number }) {
         </div>
         <CircularProgressbar
           styles={buildStyles({
-            pathColor: "black", // Tailwind's blue-700
-            trailColor: "#e5e7eb", // Tailwind's gray-200
+            pathColor: "black",
+            trailColor: "#e5e7eb",
           })}
           strokeWidth={20}
           className="text-black w-5 h-5"
