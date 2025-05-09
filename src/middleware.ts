@@ -2,7 +2,7 @@ import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
 export default async function middleware(req: NextRequest) {
-  const unprotectedPath = ["/landpage", "/signin", "/signout"];
+  const unprotectedPath = ["/signin", "/signout"];
   const url = req.nextUrl.pathname;
 
   if (unprotectedPath.includes(url)) {
@@ -19,5 +19,12 @@ export default async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/home/:path*", "/home"],
+  matcher: [
+    "/home",
+    "/home/:path*",
+    "/settings",
+    "/settings/:path*",
+    "/profile",
+    "/profile/:path*",
+  ],
 };

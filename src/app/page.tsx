@@ -7,6 +7,6 @@ export default async function Home() {
   if (session) {
     redirect("/home");
   } else {
-    redirect("/landpage");
+    redirect("/signin");
   }
 }

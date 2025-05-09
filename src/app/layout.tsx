@@ -29,7 +29,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SessionProvider>
-          <main>{children}</main>
+          {children}
           <Toaster />
         </SessionProvider>
       </body>

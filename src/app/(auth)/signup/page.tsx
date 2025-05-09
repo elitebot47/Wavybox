@@ -56,7 +56,6 @@ export default function SignUpPage() {
   }
   return (
     <div className="flex min-h-screen bg-gray-100">
-      /* Left Section - Branding */
       <div className="hidden md:flex flex-col justify-between w-1/2 bg-black text-white p-10">
         <h1 className="text-3xl font-bold">Wavybox</h1>
         <p className="text-sm">
@@ -64,7 +63,6 @@ export default function SignUpPage() {
           deliver stunning designs faster!" — Rishab Yadav
         </p>
       </div>
-      /* Right Section - Signup Form */
       <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-6">
         <Card className="w-full max-w-md shadow-md bg-white rounded-lg p-6">
           <CardHeader className="text-center">

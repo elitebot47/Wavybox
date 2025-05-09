@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { UserPost } from "@/types";
 import Imagespace from "./imagespace"; // Custom image grid
+import Link from "next/link";
 
 export default function Post({
   username,
@@ -43,7 +44,13 @@ export default function Post({
             <div>
               <div className="font-semibold">{name}</div>
               <div className="text-sm text-muted-foreground">
-                @{username} · {timeago}
+                <Link
+                  className="hover:underline hover:underline-offset-2 font-bold"
+                  href={`/${username}`}
+                >
+                  @{username}
+                </Link>
+                · {timeago}
               </div>
             </div>
             <Button variant="ghost" size="icon">
