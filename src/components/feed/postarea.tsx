@@ -4,13 +4,13 @@ import Post from "./post";
 import { motion } from "framer-motion";
 
 export default function PostArea({
+  
   posts,
   userid,
 }: {
   posts: UserPost<postImage>[];
   userid: number;
 }) {
-  
   return (
     <motion.div
       layout
@@ -20,6 +20,7 @@ export default function PostArea({
       {posts.map((post) => (
         <Post
           key={post.id}
+          id={post.id}
           images={post.images}
           username={post.author.username}
           content={post.content}

@@ -9,4 +9,5 @@ export interface UserPost<T = postImage> {
   createdAt: string;
   userId: number;
   images: T[];
+  id: number;
 }

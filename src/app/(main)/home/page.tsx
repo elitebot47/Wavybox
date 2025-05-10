@@ -29,8 +29,8 @@ export default async function Home() {
   const userid: number = session.user.id;
   return (
     <div className="flex flex-col  ">
-      <Postform userid={userid}></Postform>
-      <PostArea userid={userid} posts={posts}></PostArea>
+      <Postform userid={userid} />
+      <PostArea userid={userid} posts={posts} />
     </div>
   );
 }

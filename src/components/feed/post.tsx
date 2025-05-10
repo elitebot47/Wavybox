@@ -18,8 +18,17 @@ import {
   MoreHorizontal,
 } from "lucide-react";
 import { UserPost } from "@/types";
-import Imagespace from "./imagespace"; // Custom image grid
+import Imagespace from "./imagespace";
 import Link from "next/link";
+
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import DeletePost from "@/lib/deletepost";
+import { useSession } from "next-auth/react";
 
 export default function Post({
   username,
@@ -29,9 +38,10 @@ export default function Post({
   userId,
   images,
   tags,
+  id,
 }: UserPost & { tags?: string[] }) {
   const timeago = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
-
+  const { data: session } = useSession();
   return (
     <Card className="  w-full max-w-2xl pb-1 pt-1 mx-auto rounded-none">
       <CardHeader className="flex flex-row gap-3 items-start">
@@ -53,9 +63,28 @@ export default function Post({
                 · {timeago}
               </div>
             </div>
-            <Button variant="ghost" size="icon">
-              <MoreHorizontal className="w-4 h-4" />
-            </Button>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <MoreHorizontal className="w-4 h-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {session?.user.username === username && (
+                  <DropdownMenuItem
+                    onClick={() => DeletePost(id)}
+                    className="font-bold"
+                  >
+                    Delete post
+                  </DropdownMenuItem>
+                )}
+
+                <DropdownMenuItem className="font-bold">
+                  Block @{username}
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
           <div className="mt-2 whitespace-pre-wrap">{content}</div>
         </div>
