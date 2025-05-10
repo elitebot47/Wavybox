@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
 import Loader from "@/components/ui/loader";
@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const signinSchema = z.object({
   email: z
@@ -28,6 +29,7 @@ const signinSchema = z.object({
 });
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -66,7 +68,8 @@ export default function LoginPage() {
 
       if (res?.ok) {
         toast.success("Login successful! Redirecting to the homepage...");
-        window.location.href = "/home";
+        // window.location.href = "/home";
+        router.push("/home");
         setLoading(false);
       }
     } catch (error) {
