@@ -10,7 +10,7 @@ export default async function Home() {
   if (!session) {
     console.log("session was not there");
 
-    redirect("signin");
+    redirect("/signin");
   }
   let posts: PostType[] = await prisma.post.findMany({
     include: {
