@@ -68,8 +68,11 @@ export default function LoginPage() {
 
       if (res?.ok) {
         toast.success("Login successful! Redirecting to the homepage...");
+        console.log("before going to home");
+
         // window.location.href = "/home";
         router.push("/home");
+        console.log("after  home");
         setLoading(false);
       }
     } catch (error) {
