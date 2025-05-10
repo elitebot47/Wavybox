@@ -1,10 +1,11 @@
 import { SignOutButton } from "@/components/ui/SignButtons";
-
+import Deleteuserbut from "../ui/deleteuserbutton";
 export default function RightSideBar() {
   return (
     <div>
-      this is right side bar which will contain search bar and trending posts{" "}
       <SignOutButton></SignOutButton>
+
+      <Deleteuserbut></Deleteuserbut>
     </div>
   );
 }

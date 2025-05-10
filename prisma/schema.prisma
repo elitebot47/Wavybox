@@ -24,8 +24,8 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   authorId  Int
-  author    User     @relation(fields: [authorId], references: [id])
-  images     Image[]
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  images    Image[]
 }
 
 model Image {
@@ -33,5 +33,5 @@ model Image {
   secureUrl String
   publicId  String
   postId    Int
-  post      Post   @relation(fields: [postId], references: [id])
+  post      Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
 }

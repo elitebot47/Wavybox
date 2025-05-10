@@ -121,7 +121,7 @@ export default function LoginPage() {
             </div>
 
             <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? <Loader /> : "Sign in"}
+              {loading ? <Loader className="text-white" /> : "Sign in"}
             </Button>
           </form>
         </CardContent>

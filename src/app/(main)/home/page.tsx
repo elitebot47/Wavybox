@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import { Post as PostType } from "@prisma/client";
 import { redirect } from "next/navigation";
 
+export const revalidate = 60;
 export default async function Home() {
   const session = await auth();
   if (!session) {

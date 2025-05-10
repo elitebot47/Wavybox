@@ -2,13 +2,25 @@
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import { Button } from "./button";
+import Loader from "./loader";
+import { useState } from "react";
 
 export function SignInButton() {
   return <Link href={"/signin"}>Sign in</Link>;
 }
 
 export function SignOutButton() {
+  const [loaderstate, setLoaderstate] = useState(false);
+
   return (
-    <Button onClick={() => signOut({ callbackUrl: "/signin" })}>Signout</Button>
+    <Button
+      onClick={() => {
+        setLoaderstate(true);
+        signOut({ callbackUrl: "/signin" });
+        setLoaderstate(false);
+      }}
+    >
+      {loaderstate ? <Loader className="text-white" /> : "Signout"}
+    </Button>
   );
 }
