@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Loader from "@/components/ui/loader";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const signinSchema = z.object({
   email: z
@@ -30,10 +30,20 @@ const signinSchema = z.object({
 
 export default function LoginPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/home";
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (status === "authenticated" && session) {
+      router.replace(callbackUrl);
+    }
+  }, [status, session, router, callbackUrl]);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -52,29 +62,29 @@ export default function LoginPage() {
       setLoading(true);
       const res = await signIn("credentials", {
         redirect: false,
-        email,
+        email: email.toLowerCase().trim(),
         password,
+        callbackUrl,
       });
 
       if (res?.error) {
         if (res.error === "CredentialsSignin") {
           toast.error("Invalid email or password.");
         } else {
-          toast.error("An unexpected error occurred. Please try again.");
+          toast.error(res.error || "An unexpected error occurred. Please try again.");
         }
         setLoading(false);
         return;
       }
 
       if (res?.ok) {
-        toast.success("Login successful! Redirecting to the homepage...");
-        console.log("before going to home");
-        setLoading(false);
-        router.replace("/home");
-        console.log("after  home");
+        toast.success("Login successful! Redirecting...");
+        router.replace(callbackUrl);
       }
     } catch (error) {
+      console.error("Sign in error:", error);
       toast.error("An error occurred during sign in. Please try again.");
+    } finally {
       setLoading(false);
     }
   }

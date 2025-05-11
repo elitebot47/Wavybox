@@ -7,11 +7,7 @@ interface Credentials {
   email: string;
   password: string;
 }
-interface JWT {
-  id: number;
-  email: string;
-  username: string;
-}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     CredentialsProvider({
@@ -25,33 +21,43 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "password", type: "password" },
       },
       async authorize(credentials: Credentials) {
-        const email = credentials.email;
-        const password = credentials.password;
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
 
         try {
           const user = await prisma.user.findUnique({
             where: {
-              email: email,
+              email: credentials.email.toLowerCase().trim(),
             },
           });
+
           if (!user) {
             return null;
           }
 
-          const passwordverify = await verifyPassword(user.password, password);
+          const passwordverify = await verifyPassword(user.password, credentials.password);
 
           if (!passwordverify) {
             return null;
           }
 
-          return user;
+          return {
+            id: user.id,
+            email: user.email,
+            username: user.username,
+          };
         } catch (error) {
+          console.error("Auth error:", error);
           return null;
         }
       },
     }),
   ],
-  session: { strategy: "jwt" },
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
@@ -62,14 +68,18 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      session.user.id = token.id;
-      session.user.email = token.email;
-      session.user.username = token.username;
+      if (session.user) {
+        session.user.id = token.id;
+        session.user.email = token.email;
+        session.user.username = token.username;
+      }
       return session;
     },
   },
   pages: {
     signIn: "/signin",
+    error: "/signin",
   },
   secret: process.env.AUTH_SECRET,
+  debug: process.env.NODE_ENV === "development",
 });
