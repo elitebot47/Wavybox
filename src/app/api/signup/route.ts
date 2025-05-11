@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { HashPassword } from "@/lib/hash";
 import { Prisma } from "@prisma/client";
 import UniqueUsernameGenerator from "@/lib/uniqueusername";
+import { generateRandomAvatarUrl } from "@/lib/avatar";
 
 interface Creds {
   email: string;
@@ -30,13 +31,15 @@ export async function POST(req: NextRequest) {
       );
     }
     const finalemail = email.toLowerCase().trim();
-    const AutoGenUsername = await UniqueUsernameGenerator(finalemail);
+    const username = await UniqueUsernameGenerator(finalemail);
     const hashedPassword = await HashPassword(password);
-    const response = await prisma.user.create({
+    const avatarUrl = generateRandomAvatarUrl();
+    await prisma.user.create({
       data: {
         email: finalemail,
         password: hashedPassword,
-        username: AutoGenUsername,
+        username,
+        avatarUrl,
       },
     });
     return NextResponse.json(

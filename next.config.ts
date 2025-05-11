@@ -6,3 +6,8 @@ const config = {
 };
 
 export default config;
+module.exports = {
+  images: {
+    domains: ["api.dicebear.com", "res.cloudinary.com"],
+  },
+};

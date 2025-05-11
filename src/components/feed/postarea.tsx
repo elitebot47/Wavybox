@@ -4,8 +4,8 @@ import Post from "./post";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
-import Loader from "../ui/loader";
-import { Loader2, LucideLoader } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import Link from "next/link";
 
 async function FetchPosts() {
   try {

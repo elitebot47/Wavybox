@@ -36,7 +36,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             return null;
           }
 
-          const passwordverify = await verifyPassword(user.password, credentials.password);
+          const passwordverify = await verifyPassword(
+            user.password,
+            credentials.password
+          );
 
           if (!passwordverify) {
             return null;
@@ -46,6 +49,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             id: user.id,
             email: user.email,
             username: user.username,
+            avatarUrl: user.avatarUrl,
           };
         } catch (error) {
           console.error("Auth error:", error);
@@ -64,6 +68,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.id = user.id;
         token.email = user.email;
         token.username = user.username;
+        token.avatarUrl = user.avatarUrl;
       }
       return token;
     },
@@ -72,6 +77,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.id = token.id;
         session.user.email = token.email;
         session.user.username = token.username;
+        session.user.avatarUrl = token.avatarUrl;
       }
       return session;
     },

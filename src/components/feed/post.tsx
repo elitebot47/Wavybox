@@ -7,8 +7,7 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-// import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-// import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   MessageCircle,
@@ -29,6 +28,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import DeletePost from "@/lib/deletepost";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Post({
   username,
@@ -40,23 +40,45 @@ export default function Post({
   tags,
   id,
 }: UserPost & { tags?: string[] }) {
+  const router = useRouter();
   const timeago = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
   const { data: session } = useSession();
+
+  const handleUsernameClick = (e) => {
+    e.stopPropagation();
+  };
+
+  const handlePostClick = () => {
+    router.push(`/${username}/post/${id}`);
+  };
+
   return (
-    <Card className="  w-full max-w-2xl pb-1 pt-1 mx-auto rounded-none">
-      <CardHeader className="flex flex-row gap-3 items-start">
-        {/* <Avatar>
-          <AvatarImage src={`/avatars /${userId}.jpg`} />
-          <AvatarFallback>{name?.[0] ?? "U"}</AvatarFallback>
-        </Avatar> */}
+    <Card
+      className="w-full max-w-2xl pb-1 pt-2 mx-auto gap-0 rounded-none cursor-pointer"
+      onClick={handlePostClick}
+    >
+      <CardHeader className="flex flex-row px-2  items-start">
+        <div
+          onClick={(e) => {
+            e.stopPropagation();
+            router.push(`/${username}`);
+          }}
+          className="cursor-pointer "
+        >
+          <Avatar className="transition-all duration-500 size-10 hover:backdrop-brightness-90 hover:outline-2">
+            <AvatarImage src={`${session.user.avatarUrl}`} />
+            <AvatarFallback>{name?.[0] ?? "U"}</AvatarFallback>
+          </Avatar>
+        </div>
         <div className="flex-1">
           <div className="flex justify-between items-center">
-            <div>
+            <div className="">
               <div className="font-semibold">{name}</div>
               <div className="text-sm text-muted-foreground">
                 <Link
-                  className="hover:underline hover:underline-offset-2 font-bold"
+                  className="hover:underline hover:underline-offset-2 text-black font-bold"
                   href={`/${username}`}
+                  onClick={handleUsernameClick}
                 >
                   @{username}
                 </Link>
@@ -66,65 +88,89 @@ export default function Post({
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   <MoreHorizontal className="w-4 h-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 {session?.user.username === username && (
                   <DropdownMenuItem
-                    onClick={() => DeletePost(id)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      DeletePost(id);
+                    }}
                     className="font-bold"
                   >
-                    Delete post
+                    Delete
                   </DropdownMenuItem>
                 )}
 
-                <DropdownMenuItem className="font-bold">
+                <DropdownMenuItem
+                  className="font-bold"
+                  onClick={(e) => e.stopPropagation()}
+                >
                   Block @{username}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-          <div className="mt-2 whitespace-pre-wrap">{content}</div>
+          <div className="mt-2 whitespace-pre-wrap pl-2">{content}</div>
+          {images && images.length > 0 && (
+            <CardContent className="pl-2 mt-2.5">
+              <Imagespace  images={images} />
+            </CardContent>
+          )}
         </div>
       </CardHeader>
 
-      {images && images.length > 0 && (
-        <CardContent className="px-6">
-          <Imagespace images={images} />
-        </CardContent>
-      )}
-
       {/* {tags?.length ? (
-        <CardContent className="flex flex-wrap gap-2 mt-2 px-6">
-          {tags.slice(0, 3).map((tag) => (
-            <Badge variant="outline" key={tag}>
-              #{tag}
-            </Badge>
-          ))}
-          {tags.length > 3 && (
-            <span className="text-sm text-muted-foreground">
-              ...and {tags.length - 3} more
-            </span>
+      <CardContent className="flex flex-wrap gap-2 mt-2 px-6">
+      {tags.slice(0, 3).map((tag) => (
+        <Badge variant="outline" key={tag}>
+        #{tag}
+        </Badge>
+        ))}
+        {tags.length > 3 && (
+          <span className="text-sm text-muted-foreground">
+          ...and {tags.length - 3} more
+          </span>
           )}
-        </CardContent>
-      ) : null} */}
+          </CardContent>
+          ) : null} */}
 
-      <CardFooter className="flex justify-between px-6 text-muted-foreground">
-        <Button variant="ghost" size="sm" className="flex gap-1 items-center">
+      <CardFooter className="flex justify-between px-6 pl-14 mt-2 pb-1 text-muted-foreground">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="flex gap-1 items-center"
+          onClick={(e) => e.stopPropagation()}
+        >
           <MessageCircle className="w-4 h-4" />
           <span>6</span>
         </Button>
-        <Button variant="ghost" size="sm" className="flex gap-1 items-center">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="flex gap-1 items-center"
+          onClick={(e) => e.stopPropagation()}
+        >
           <Repeat2 className="w-4 h-4" />
           <span>122</span>
         </Button>
-        <Button variant="ghost" size="sm" className="flex gap-1 items-center">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="flex gap-1 items-center"
+          onClick={(e) => e.stopPropagation()}
+        >
           <Heart className="w-4 h-4" />
           <span>183</span>
         </Button>
-        <Button variant="ghost" size="sm">
+        <Button variant="ghost" size="sm" onClick={(e) => e.stopPropagation()}>
           <Bookmark className="w-4 h-4" />
         </Button>
       </CardFooter>

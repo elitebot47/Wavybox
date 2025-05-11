@@ -4,8 +4,6 @@ export default function RightSideBar() {
   return (
     <div>
       <SignOutButton></SignOutButton>
-
-      <Deleteuserbut></Deleteuserbut>
     </div>
   );
 }
