@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
-import { CircleX, Image } from "lucide-react";
+import { CircleX, Image, LanguagesIcon, PencilIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -21,6 +21,7 @@ import { CldImage } from "next-cloudinary";
 import { motion } from "framer-motion";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { Span } from "next/dist/trace";
 
 interface imageData {
   url: string;
@@ -43,7 +44,7 @@ export default function Postform({
   const [imagesArray, setimagesArray] = useState<imageData[]>([]);
 
   async function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
-    const files = event.target.files;
+    const files: any = event.target.files;
     if (!files || files.length === 0) return;
     if (((!files || files.length) | imagesArray.length) >= 5) {
       toast.error("Max upload allowed:4");
@@ -209,7 +210,14 @@ export default function Postform({
             }}
           >
             <SelectTrigger className="w-auto h-9 bg-white  border-gray-200">
-              <SelectValue placeholder="Translate to" />
+              <SelectValue
+                placeholder={
+                  <div>
+                    <span className=" sm:block hidden">Translate</span>
+                    <LanguagesIcon className=" block sm:hidden"></LanguagesIcon>
+                  </div>
+                }
+              />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="Hindi">Hindi</SelectItem>
@@ -231,7 +239,8 @@ export default function Postform({
             variant="outline"
             className="h-9 border-gray-200 w-auto"
           >
-            Improve Writing
+            <span className=" hidden sm:block">Improve Writing</span>
+            <PencilIcon className="block sm:hidden"></PencilIcon>
           </Button>
         </div>
         <CircularProgressbar

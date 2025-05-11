@@ -41,23 +41,17 @@ export default function PostArea({
           <Loader2 className="animate-spin"></Loader2>
         </div>
       )}
-      {posts.length === 0 ? (
-        <p className="text-center text-muted-foreground py-4 font-mono">
-          No posts yet.
-        </p>
-      ) : (
-        posts.map((post) => (
-          <Post
-            key={post.id}
-            id={post.id}
-            images={post.images}
-            username={post.author.username}
-            content={post.content}
-            createdAt={new Date(post.createdAt).getTime()}
-            userId={userid}
-          />
-        ))
-      )}
+      {posts.map((post) => (
+        <Post
+          key={post.id}
+          id={post.id}
+          images={post.images}
+          username={post.author.username}
+          content={post.content}
+          createdAt={new Date(post.createdAt).getTime()}
+          userId={userid}
+        />
+      ))}
     </motion.div>
   );
 }

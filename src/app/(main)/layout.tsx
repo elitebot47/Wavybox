@@ -14,7 +14,7 @@ export default async function MainLayout({
     redirect("/signin");
   }
   return (
-    <div className="flex justify-center w-full px-4 md:px-8">
+    <div className="flex justify-center w-full  sm:px-8">
       <aside className="hidden lg:flex lg:items-center lg:justify-center lg:w-[250px] z-[30] sticky top-0 h-screen">
         <LeftSideBar />
       </aside>
