@@ -101,7 +101,7 @@ export default function Postform({
     }
 
     try {
-      await axios.post("/api/post/add", {
+      await axios.post("/api/post", {
         content: postTextcontent,
         userid: userId,
         images: imagesArray,

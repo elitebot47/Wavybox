@@ -7,11 +7,8 @@ import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await auth();
-  console.log("session:" + session);
 
   if (!session) {
-    console.log("session was not there");
-
     redirect("/signin");
   }
   let posts: PostType[] = await prisma.post.findMany({
@@ -26,14 +23,13 @@ export default async function Home() {
         },
       },
     },
+    orderBy: { createdAt: "desc" },
   });
 
-  posts = posts.reverse();
-  const userid: number = session.user.id;
   return (
     <div className="flex flex-col  ">
-      <Postform userid={userid} />
-      <PostArea userid={userid} posts={posts} />
+      <Postform userid={session.user.id} />
+      <PostArea userid={session.user.id} intialposts={posts} />
     </div>
   );
 }

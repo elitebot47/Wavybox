@@ -47,3 +47,39 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
   }
 }
+export async function GET() {
+  try {
+    const posts = await prisma.post.findMany({
+      include: {
+        author: { select: { username: true } },
+        images: { select: { secureUrl: true, publicId: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    });
+    return NextResponse.json({ posts });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "error while fetching posts!" },
+      { status: 40 }
+    );
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  const { postId } = await req.json();
+  try {
+    await prisma.post.delete({
+      where: { id: postId },
+    });
+    return NextResponse.json({
+      message: " Your post was deleted",
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Error while deleting" },
+      {
+        status: 409,
+      }
+    );
+  }
+}

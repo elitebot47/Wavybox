@@ -3,7 +3,7 @@ import { toast } from "sonner";
 
 export default async function DeletePost(postid: number) {
   try {
-    await axios.delete(`/api/post/delete`, {
+    await axios.delete(`/api/post`, {
       data: {
         postId: postid,
       },
