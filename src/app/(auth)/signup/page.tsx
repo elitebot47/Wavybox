@@ -56,12 +56,11 @@ export default function SignUpPage() {
   }
   return (
     <div className="flex min-h-screen bg-gray-100">
-      <div className="hidden md:flex flex-col justify-between w-1/2 bg-black text-white p-10">
-        <h1 className="text-3xl font-bold">Wavybox</h1>
-        <p className="text-sm">
-          "This platform has saved me countless hours of work and helped me
-          deliver stunning designs faster!" — Rishab Yadav
-        </p>
+      <div className="hidden md:flex flex-col gap-7 w-1/2 bg-black text-white p-10">
+        <h1 className="text-5xl font-bold">Wavybox</h1>
+        <h2 className="text-xl font-mono flex  ">
+          <div className="ml-2">Where Every Voice Has Space</div>
+        </h2>
       </div>
       <div className="flex flex-col justify-center items-center w-full md:w-1/2 p-6">
         <Card className="w-full max-w-md shadow-md bg-white rounded-lg p-6">

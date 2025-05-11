@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Social Media App",
-  description: "A modern social media application",
+  title: "Wavy box",
+  description: "An uncensored social media paltform",
   viewport: "width=device-width, initial-scale=1",
   icons: {
     icon: "/favicon.ico",
@@ -34,7 +34,9 @@ export default async function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
+      >
         <SessionProvider session={session}>
           {children}
           <Toaster position="top-center" richColors />
