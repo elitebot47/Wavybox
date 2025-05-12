@@ -1,6 +1,6 @@
 "use client";
 
-import { formatDistanceToNow } from "date-fns";
+import { formatDistanceToNow, formatDistanceToNowStrict } from "date-fns";
 import {
   Card,
   CardHeader,
@@ -29,7 +29,23 @@ import {
 import DeletePost from "@/lib/deletepost";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+function getShortRelativeTime(date: Date | string) {
+  const full = formatDistanceToNowStrict(new Date(date), { addSuffix: true });
 
+  return full
+    .replace(" hours", " h")
+    .replace(" hour", " h")
+    .replace(" minutes", " m")
+    .replace(" minute", " m")
+    .replace(" seconds", " s")
+    .replace(" second", " s")
+    .replace(" days", " d")
+    .replace(" day", " d")
+    .replace(" months", " mo")
+    .replace(" month", " mo")
+    .replace(" years", " y")
+    .replace(" year", " y");
+}
 export default function Post({
   username,
   content,
@@ -39,9 +55,10 @@ export default function Post({
   images,
   tags,
   id,
+  avatarUrl,
 }: UserPost & { tags?: string[] }) {
   const router = useRouter();
-  const timeago = formatDistanceToNow(new Date(createdAt), { addSuffix: true });
+  const timeago = getShortRelativeTime(createdAt);
   const { data: session } = useSession();
 
   const handleUsernameClick = (e) => {
@@ -66,7 +83,7 @@ export default function Post({
           className="cursor-pointer "
         >
           <Avatar className="transition-all duration-500 size-10 hover:backdrop-brightness-90 hover:outline-2">
-            <AvatarImage src={`${session.user.avatarUrl}`} />
+            <AvatarImage src={`${avatarUrl}`} />
             <AvatarFallback>{name?.[0] ?? "U"}</AvatarFallback>
           </Avatar>
         </div>
@@ -121,7 +138,7 @@ export default function Post({
           <div className="mt-2 whitespace-pre-wrap pl-2">{content}</div>
           {images && images.length > 0 && (
             <CardContent className="pl-2 mt-2.5">
-              <Imagespace  images={images} />
+              <Imagespace images={images} />
             </CardContent>
           )}
         </div>

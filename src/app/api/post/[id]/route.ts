@@ -1,6 +1,5 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { number } from "zod";
 
 export async function GET(
   req: NextRequest,
@@ -10,7 +9,7 @@ export async function GET(
     const { id } = context.params;
     const post = await prisma.post.findUnique({
       include: {
-        author: { select: { username: true, id: true } },
+        author: { select: { username: true, id: true, avatarUrl: true } },
         images: { select: { secureUrl: true, publicId: true } },
       },
       where: {

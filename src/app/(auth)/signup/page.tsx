@@ -54,6 +54,7 @@ export default function SignUpPage() {
       }
     }
   }
+  
   return (
     <div className="flex min-h-screen bg-gray-100">
       <div className="hidden md:flex flex-col gap-7 w-1/2 bg-black text-white p-10">

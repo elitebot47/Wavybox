@@ -85,14 +85,14 @@ export default function LeftSideBar() {
             className={pathname == "/home" ? "bg-black text-white" : ""}
           />
         </Link>
-        <Link href={"explore"}>
+        <Link href={"/explore"}>
           <SidebarButton
             icon={LucideHash}
             label="Explore"
             className={pathname == "/explore" ? "bg-black text-white" : ""}
           />
         </Link>
-        <Link href={"notifications"}>
+        <Link href={"/notifications"}>
           <SidebarButton
             icon={BellIcon}
             label="Notifications"
@@ -101,14 +101,14 @@ export default function LeftSideBar() {
             }
           />
         </Link>
-        <Link href={"messages"}>
+        <Link href={"/messages"}>
           <SidebarButton
             icon={MessageCircleDashed}
             label="Messages"
             className={pathname == "/messages" ? "bg-black text-white" : ""}
           />
         </Link>
-        <Link href={"settings"}>
+        <Link href={"/settings"}>
           <SidebarButton
             icon={LucideSettings2}
             label="Settings"
