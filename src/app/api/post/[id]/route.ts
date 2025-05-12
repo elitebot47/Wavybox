@@ -4,7 +4,7 @@ import { number } from "zod";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: number } }
+  { params }: { params: { id: string } }
 ) {
   try {
     const { id } = params;
