@@ -4,10 +4,10 @@ import { number } from "zod";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
-    const { id } = params;
+    const { id } = context.params;
     const post = await prisma.post.findUnique({
       include: {
         author: { select: { username: true, id: true } },
