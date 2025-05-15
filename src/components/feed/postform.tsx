@@ -21,7 +21,7 @@ import { CldImage } from "next-cloudinary";
 import { motion } from "framer-motion";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
-import { Span } from "next/dist/trace";
+import { usePostModalStore } from "@/store/postStore";
 
 interface imageData {
   url: string;
@@ -35,6 +35,7 @@ export default function Postform({
   userid: number;
   className?: string;
 }) {
+  const { closeModal } = usePostModalStore();
   const [posting, setPosting] = useState(false);
   const userId = userid;
   const [postTextcontent, setpostTextcontent] = useState("");
@@ -107,6 +108,7 @@ export default function Postform({
         userid: userId,
         images: imagesArray,
       });
+      closeModal();
       toast.success("Post published successfully");
       setpostTextcontent("");
       setimagesArray([]);
@@ -119,10 +121,12 @@ export default function Postform({
 
   return (
     <motion.div
-      layout
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 100 }}
-      transition={{ layout: { duration: 0.5, ease: "easeOut" } }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{
+        opacity: { duration: 0.5, ease: "easeOut" },
+        layouty: { duration: 0.5, ease: "easeOut" },
+      }}
       className={`border   shadow-none border-t-0 border-gray-200 p-4 flex flex-col gap-3 bg-white  overflow-hidden ${
         className ?? ""
       }`}
@@ -133,6 +137,7 @@ export default function Postform({
         )}
 
         <Textarea
+          autoFocus
           maxLength={150}
           value={postTextcontent}
           disabled={ailoader || posting}
