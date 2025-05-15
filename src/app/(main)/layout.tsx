@@ -4,6 +4,9 @@ import { redirect } from "next/navigation";
 import LeftSideBar from "@/components/layout/leftSidebar";
 import RightSideBar from "@/components/layout/rightSidebar";
 import AnimationLayout from "@/components/animationlayout";
+import { Button } from "@/components/ui/button";
+import { Plus } from "lucide-react";
+import PostModalfunction from "@/lib/postmodalicon";
 export default async function MainLayout({
   children,
 }: {
@@ -21,6 +24,7 @@ export default async function MainLayout({
           <LeftSideBar />
         </aside>
 
+        <PostModalfunction></PostModalfunction>
         <main className="w-full max-w-[600px] border-x z-[20] border-gray-200 min-h-screen">
           {children}
         </main>

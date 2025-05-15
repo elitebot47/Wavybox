@@ -29,7 +29,11 @@ export default function PostArea({
   });
 
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 100 }}>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 2 }}
+    >
       <AnimatePresence>
         {isFetching && (
           <motion.div
@@ -45,10 +49,9 @@ export default function PostArea({
         )}
       </AnimatePresence>
       <motion.div
-        layout
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
+        transition={{ duration: 2 }}
         className="flex flex-col overflow-hidden border-t-0"
       >
         {posts.map((post) => (

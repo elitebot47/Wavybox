@@ -16,16 +16,18 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 import { useSession } from "next-auth/react";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import Link from "next/link";
+import { usePostModalStore } from "@/store/postStore";
 
 export default function LeftSideBar() {
+  const { isOpen, openModal, closeModal } = usePostModalStore();
+
   const pathname = usePathname();
   const { data: session } = useSession();
   const userid = session?.user.id;
-  const [postModal, setPostModal] = useState(false);
   useEffect(() => {
-    if (postModal) {
+    if (isOpen) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
@@ -34,17 +36,17 @@ export default function LeftSideBar() {
     return () => {
       document.body.style.overflow = "";
     };
-  }, [postModal]);
+  }, [isOpen]);
   return (
     <div>
       <AnimatePresence>
-        {postModal && (
+        {isOpen && (
           <motion.div
             className="fixed inset-0 bg-black/70 backdrop-blur-xs flex justify-center items-start pt-12 z-50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setPostModal(false)}
+            onClick={() => closeModal()}
           >
             <motion.div
               className="bg-white rounded-xl shadow-lg max-w-xl w-full overflow-hidden"
@@ -57,7 +59,7 @@ export default function LeftSideBar() {
               <div className="p-2">
                 <Button
                   size="icon"
-                  onClick={() => setPostModal(false)}
+                  onClick={() => closeModal()}
                   className=" group rounded-full hover:shadow-lg border-0 shadow-none bg-transparent  hover:scale-110"
                 >
                   <Plus className="group-hover:text-white   transition-colors rotate-45 size-6 text-black " />
@@ -116,7 +118,7 @@ export default function LeftSideBar() {
           />
         </Link>
         <SidebarButton
-          onClick={() => setPostModal(true)}
+          onClick={() => openModal()}
           className="justify-center bg-black text-white"
           label="Post"
         />

@@ -23,7 +23,7 @@ export default function SidebarButton({
       {...props}
     >
       <div>{Icon && <Icon className="size-6" />}</div>
-      <div>{label}</div>
+      <div className="">{label}</div>
     </Button>
   );
 }

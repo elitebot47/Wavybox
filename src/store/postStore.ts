@@ -8,6 +8,12 @@ interface PostStore {
   addPost: (post: Post) => void;
   clearPosts: () => void;
 }
+type ModalStore = {
+  isOpen: boolean;
+  openModal: () => void;
+  closeModal: () => void;
+  toggleModal: () => void;
+};
 
 export const usePostStore = create<PostStore>((set) => ({
   posts: [],
@@ -17,4 +23,10 @@ export const usePostStore = create<PostStore>((set) => ({
       posts: [post, ...state.posts],
     })),
   clearPosts: () => set({ posts: [] }),
+}));
+export const usePostModalStore = create<ModalStore>((set) => ({
+  isOpen: false,
+  openModal: () => set({ isOpen: true }),
+  closeModal: () => set({ isOpen: false }),
+  toggleModal: () => set((state) => ({ isOpen: !state.isOpen })),
 }));
