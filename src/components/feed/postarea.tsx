@@ -2,6 +2,7 @@
 import { UserPost, postImage } from "@/types";
 import Post from "./post";
 import { motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
@@ -28,17 +29,27 @@ export default function PostArea({
   });
 
   return (
-    <div>
-      {isFetching && (
-        <div className="flex justify-center py-1">
-          <Loader2 className="animate-spin"></Loader2>
-        </div>
-      )}
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 100 }}>
+      <AnimatePresence>
+        {isFetching && (
+          <motion.div
+            key="loader"
+            initial={{ opacity: 0, scale: 0.7 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.7 }}
+            transition={{ duration: 1, ease: "easeInOut" }}
+            className="flex justify-center py-1"
+          >
+            <Loader2 className="animate-spin" />
+          </motion.div>
+        )}
+      </AnimatePresence>
       <motion.div
+        layout
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ opacity: { duration: 0.8 } }}
-        className=" flex flex-col    overflow-hidden border-t-0"
+        transition={{ duration: 1 }}
+        className="flex flex-col overflow-hidden border-t-0"
       >
         {posts.map((post) => (
           <Post
@@ -53,6 +64,6 @@ export default function PostArea({
           />
         ))}
       </motion.div>
-    </div>
+    </motion.div>
   );
 }

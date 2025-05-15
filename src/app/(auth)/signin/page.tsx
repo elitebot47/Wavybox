@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { signIn, useSession } from "next-auth/react";
 import Loader from "@/components/ui/loader";
@@ -17,6 +17,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
+import { AnimatePresence, motion } from "framer-motion";
 
 const signinSchema = z.object({
   email: z
@@ -29,11 +30,12 @@ const signinSchema = z.object({
 });
 
 export default function LoginPage() {
+  const [showlogin, setShowlogin] = useState(true);
   const router = useRouter();
   const { data: session, status } = useSession();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/home";
-  
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -41,6 +43,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (status === "authenticated" && session) {
+      //this routes user to the url he was visitng after verification
       router.replace(callbackUrl);
     }
   }, [status, session, router, callbackUrl]);
@@ -71,13 +74,16 @@ export default function LoginPage() {
         if (res.error === "CredentialsSignin") {
           toast.error("Invalid email or password.");
         } else {
-          toast.error(res.error || "An unexpected error occurred. Please try again.");
+          toast.error(
+            res.error || "An unexpected error occurred. Please try again."
+          );
         }
         setLoading(false);
         return;
       }
 
       if (res?.ok) {
+        setShowlogin(false);
         toast.success("Login successful! Redirecting...");
         router.replace(callbackUrl);
       }
@@ -91,67 +97,80 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900 px-4 py-12">
-      <Card className="w-full max-w-md shadow-md">
-        <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-bold">Login</CardTitle>
-        </CardHeader>
+      {showlogin && (
+        <AnimatePresence>
+          <motion.div
+            initial={{ opacity: 0, y: -700 }}
+            animate={{ opacity: 100, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="w-full max-w-md"
+            exit={{ opacity: 0, y: 700 }}
+          >
+            <Card className=" shadow-md">
+              <CardHeader className="space-y-1 text-center">
+                <CardTitle className="text-2xl font-bold">Login</CardTitle>
+              </CardHeader>
 
-        <CardContent>
-          {error && (
-            <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm rounded-md">
-              {error}
-            </div>
-          )}
+              <CardContent>
+                {error && (
+                  <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 text-sm rounded-md">
+                    {error}
+                  </div>
+                )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="email" className="text-sm font-medium">
-                Email
-              </Label>
-              <Input
-                disabled={loading}
-                value={email}
-                id="email"
-                type="text"
-                placeholder="eg. manish.y@gmail.com"
-                className="w-full"
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="email" className="text-sm font-medium">
+                      Email
+                    </Label>
+                    <Input
+                      autoFocus
+                      disabled={loading}
+                      value={email}
+                      id="email"
+                      type="text"
+                      placeholder="eg. manish.y@gmail.com"
+                      className="focus:!ring-black focus:!ring-1 w-full"
+                      onChange={(e) => setEmail(e.target.value)}
+                    />
+                  </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password" className="text-sm font-medium">
-                Password
-              </Label>
-              <Input
-                disabled={loading}
-                value={password}
-                id="password"
-                type="password"
-                placeholder="eg. 3#$fAad"
-                className="w-full"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="password" className="text-sm font-medium">
+                      Password
+                    </Label>
+                    <Input
+                      disabled={loading}
+                      value={password}
+                      id="password"
+                      type="password"
+                      placeholder="eg. 3#$fAad"
+                      className="focus:!ring-black focus:!ring-1 w-full"
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </div>
 
-            <Button type="submit" className="w-full" disabled={loading}>
-              {loading ? <Loader className="text-white" /> : "Sign in"}
-            </Button>
-          </form>
-        </CardContent>
+                  <Button type="submit" className="w-full" disabled={loading}>
+                    {loading ? <Loader className="text-white" /> : "Sign in"}
+                  </Button>
+                </form>
+              </CardContent>
 
-        <CardFooter className="flex justify-center border-t p-4">
-          <div className="text-center text-sm">
-            New user?{" "}
-            <Link
-              href="/signup"
-              className="font-medium text-primary hover:underline"
-            >
-              Register
-            </Link>
-          </div>
-        </CardFooter>
-      </Card>
+              <CardFooter className="flex justify-center border-t p-4">
+                <div className="text-center text-sm">
+                  New user?{" "}
+                  <Link
+                    href="/signup"
+                    className="font-medium text-primary hover:underline"
+                  >
+                    Register
+                  </Link>
+                </div>
+              </CardFooter>
+            </Card>
+          </motion.div>
+        </AnimatePresence>
+      )}
     </div>
   );
 }

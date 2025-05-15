@@ -3,6 +3,7 @@ export interface postImage {
   publicId: string;
 }
 export interface UserPost<T = postImage> {
+  author: any;
   username: string;
   content: string;
   name?: string;

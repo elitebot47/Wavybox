@@ -120,6 +120,8 @@ export default function Postform({
   return (
     <motion.div
       layout
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 100 }}
       transition={{ layout: { duration: 0.5, ease: "easeOut" } }}
       className={`border   shadow-none border-t-0 border-gray-200 p-4 flex flex-col gap-3 bg-white  overflow-hidden ${
         className ?? ""
