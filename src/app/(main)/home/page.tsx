@@ -11,7 +11,8 @@ export default async function Home() {
   if (!session) {
     redirect("/signin");
   }
-  let posts: PostType[] = await prisma.post.findMany({
+
+  const posts: PostType[] = await prisma.post.findMany({
     include: {
       author: {
         select: { username: true },
@@ -28,7 +29,7 @@ export default async function Home() {
 
   return (
     <div className="flex flex-col  ">
-      <Postform userid={session.user.id} />
+      <Postform className="lg:flex hidden" userid={session.user.id} />
       <PostArea userid={session.user.id} intialposts={posts} />
     </div>
   );

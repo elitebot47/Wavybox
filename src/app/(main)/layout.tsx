@@ -4,9 +4,8 @@ import { redirect } from "next/navigation";
 import LeftSideBar from "@/components/layout/leftSidebar";
 import RightSideBar from "@/components/layout/rightSidebar";
 import AnimationLayout from "@/components/animationlayout";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
 import PostModalfunction from "@/lib/postmodalicon";
+import Modals from "@/components/modal";
 export default async function MainLayout({
   children,
 }: {
@@ -23,8 +22,7 @@ export default async function MainLayout({
         <aside className="hidden lg:flex lg:items-center lg:justify-center lg:w-[250px] z-[30] sticky top-0 h-screen">
           <LeftSideBar />
         </aside>
-
-        <PostModalfunction></PostModalfunction>
+        <Modals></Modals>
         <main className="w-full max-w-[600px] border-x z-[20] border-gray-200 min-h-screen">
           {children}
         </main>

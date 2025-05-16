@@ -22,6 +22,7 @@ import { motion } from "framer-motion";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { usePostModalStore } from "@/store/postStore";
+import { useMobileStore } from "@/store/isMobileStore";
 
 interface imageData {
   url: string;
@@ -43,6 +44,7 @@ export default function Postform({
   const [ailoader, setAiloader] = useState(false);
   const [imageloader, setimageloader] = useState(false);
   const [imagesArray, setimagesArray] = useState<imageData[]>([]);
+  const { ismobile } = useMobileStore();
 
   async function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const files: any = event.target.files;
@@ -151,21 +153,21 @@ export default function Postform({
         <div className="flex flex-wrap ">
           {imagesArray.map((image) => (
             <div
-              className="relative group rounded-lg overflow-hidden"
+              className="relative group rounded-lg overflow-hidden m-0.5"
               key={image.public_id}
             >
               <CldImage
                 src={image.url}
                 alt={image.public_id}
-                width={200}
-                height={200}
+                width={ismobile ? 70 : 150}
+                height={ismobile ? 70 : 150}
                 loading="eager"
               ></CldImage>
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-              <div className="absolute top-1.5 right-1.5 opacity-0 group-hover:opacity-100 transition-opacity  duration-200">
+              <div className="absolute top-1.5 right-1.5 lg:opacity-0 opacity-100 group-hover:opacity-100 transition-opacity  duration-200 ">
                 <button
-                  className="text-white"
+                  className="text-black lg:text-white"
                   title="Remove"
                   onClick={async () => {
                     setimagesArray((prev) =>
