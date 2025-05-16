@@ -1,5 +1,6 @@
 import PostArea from "@/components/feed/postarea";
 import Postform from "@/components/feed/postform";
+import DownBar from "@/components/layout/downbar";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Post as PostType } from "@prisma/client";

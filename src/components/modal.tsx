@@ -6,11 +6,25 @@ import { Plus } from "lucide-react";
 import Postform from "./feed/postform";
 import { Button } from "./ui/button";
 import { useSession } from "next-auth/react";
+import { useMobileStore } from "@/store/isMobileStore";
+import { useEffect } from "react";
 
 export default function Modals() {
+  const { ismobile } = useMobileStore();
   const { data: session } = useSession();
   const userid = session?.user.id;
   const { isOpen, openModal, closeModal } = usePostModalStore();
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   return (
     <div>
@@ -20,14 +34,14 @@ export default function Modals() {
             className="fixed inset-0 px-2 bg-black/70 backdrop-blur-xs flex justify-center items-start pt-12 z-50"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0, y: 500 }}
+            exit={{ opacity: 0 }}
             onClick={() => closeModal()}
           >
             <motion.div
               className="  bg-white rounded-xl shadow-lg max-w-xl w-full overflow-hidden"
               initial={{ opacity: 0, y: -60 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -60 }}
+              exit={{ opacity: 0, y: 700 }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -49,15 +63,17 @@ export default function Modals() {
           </motion.div>
         )}
       </AnimatePresence>
-      <div className="fixed bottom-20 right-20 z-50">
-        <Button
-          onClick={() => openModal()}
-          size="icon"
-          className="absolute w-16 h-16  rounded-full"
-        >
-          <Plus className="size-7"></Plus>
-        </Button>
-      </div>
+      {ismobile && !isOpen && (
+        <div className="fixed bottom-35 right-20 z-50">
+          <Button
+            onClick={() => openModal()}
+            size="icon"
+            className="absolute w-16 h-16  rounded-full"
+          >
+            <Plus className="size-7"></Plus>
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

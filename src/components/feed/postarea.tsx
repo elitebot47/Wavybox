@@ -42,7 +42,7 @@ export default function PostArea({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.7 }}
             transition={{ duration: 1, ease: "easeInOut" }}
-            className="flex justify-center py-1"
+            className="flex justify-center py-2"
           >
             <Loader2 className="animate-spin" />
           </motion.div>

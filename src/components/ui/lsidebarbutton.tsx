@@ -17,13 +17,13 @@ export default function SidebarButton({
   return (
     <Button
       className={cn(
-        "w-[200px] flex justify-start gap-2 text-2xl p-3  h-16 rounded-full hover:bg-black/80 hover:text-white transition-all duration-300 border-black items-center shadow-gray-400 bg-white border-2  text-black",
+        "max-w-[200px] flex justify-start gap-2 text-2xl p-3  h-16 rounded-full  lg:hover:bg-black/80 lg:hover:text-white transition-all duration-300 border-black items-center shadow-gray-400 bg-white border-2  text-black",
         className
       )}
       {...props}
     >
-      <div>{Icon && <Icon className="size-6" />}</div>
-      <div className="">{label}</div>
+      {Icon && <Icon className="size-6" />}
+      {label && <div className="">{label}</div>}
     </Button>
   );
 }
