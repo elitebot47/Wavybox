@@ -9,6 +9,7 @@ import {
 import SidebarButton from "../ui/lsidebarbutton";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 const navItems = [
   { href: "/explore", icon: LucideHash, label: "Explore" },
@@ -19,6 +20,8 @@ const navItems = [
 ];
 
 export default function DownBar({ className }) {
+  const { data: session } = useSession();
+
   const pathname = usePathname();
 
   return (
@@ -37,6 +40,16 @@ export default function DownBar({ className }) {
           />
         </Link>
       ))}
+      <Link href={`${session.user.username}`} aria-label={"My profile"}>
+        <SidebarButton
+          avatarUrl={`${session.user.avatarUrl}`}
+          className={` shadow-none h-auto p-1  border-2 border-gray-400 ${
+            pathname === `${session.user.id}`
+              ? "shadow-2xl border-2 shadow-black text-white border-black"
+              : ""
+          }`}
+        />
+      </Link>
     </div>
   );
 }

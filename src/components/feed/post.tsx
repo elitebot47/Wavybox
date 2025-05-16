@@ -71,7 +71,7 @@ export default function Post({
 
   return (
     <Card
-      className="w-full max-w-2xl pb-1 pt-2 mx-auto gap-0 rounded-none cursor-pointer"
+      className="w-full max-w-2xl border-x-0 pb-1 pt-2 mx-auto gap-0 rounded-none cursor-pointer"
       onClick={handlePostClick}
     >
       <CardHeader className="flex flex-row px-2  items-start">

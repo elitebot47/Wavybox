@@ -19,6 +19,9 @@ export default async function UserProfilePage({ params }) {
           createdAt: true,
           images: true,
         },
+        orderBy: {
+          createdAt: "desc",
+        },
       },
     },
   });

@@ -33,6 +33,7 @@ export default function PostArea({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 2 }}
+      className="!mb-16"
     >
       <AnimatePresence>
         {isFetching && (
@@ -52,10 +53,10 @@ export default function PostArea({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 2 }}
-        className="flex flex-col overflow-hidden border-t-0"
+        className="flex flex-col  overflow-hidden border-t-0 border-x-0"
       >
         {posts.map((post) => (
-          <Post
+          <Post 
             avatarUrl={post.author.avatarUrl}
             key={post.id}
             id={post.id}

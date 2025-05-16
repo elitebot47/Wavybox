@@ -2,15 +2,19 @@ import { Button } from "./button";
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ComponentProps } from "react";
+import Image from "next/image";
+import { useSession } from "next-auth/react";
 
 interface SidebarButtonProps extends ComponentProps<typeof Button> {
   icon?: LucideIcon;
   label?: string;
+  avatarUrl?: string;
 }
 
 export default function SidebarButton({
   icon: Icon,
   label,
+  avatarUrl,
   className,
   ...props
 }: SidebarButtonProps) {
@@ -22,6 +26,16 @@ export default function SidebarButton({
       )}
       {...props}
     >
+      {avatarUrl && (
+        <div className="rounded-full  h-auto">
+          <img
+            alt="Profile picture"
+            width={35}
+            height={35}
+            src={avatarUrl}
+          ></img>
+        </div>
+      )}
       {Icon && <Icon className="size-6" />}
       {label && <div className="">{label}</div>}
     </Button>
