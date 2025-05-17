@@ -1,6 +1,6 @@
 "use client";
 
-import { formatDistanceToNow, formatDistanceToNowStrict } from "date-fns";
+import { formatDistanceToNowStrict } from "date-fns";
 import {
   Card,
   CardHeader,
@@ -29,6 +29,10 @@ import {
 import DeletePost from "@/lib/deletepost";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { Progress } from "../ui/progress";
+
 function getShortRelativeTime(date: Date | string) {
   const full = formatDistanceToNowStrict(new Date(date), { addSuffix: true });
 
@@ -46,6 +50,7 @@ function getShortRelativeTime(date: Date | string) {
     .replace(" years", " y")
     .replace(" year", " y");
 }
+
 export default function Post({
   username,
   content,
@@ -57,10 +62,26 @@ export default function Post({
   id,
   avatarUrl,
 }: UserPost & { tags?: string[] }) {
+  const queryClient = useQueryClient();
   const router = useRouter();
   const timeago = getShortRelativeTime(createdAt);
   const { data: session } = useSession();
 
+  const { mutate: deletePost, isPending } = useMutation({
+    mutationFn: DeletePost,
+    onSuccess: () => {
+      const keys = [["allposts"], ["user-posts", username]];
+      keys.forEach((key) =>
+        queryClient.invalidateQueries({
+          queryKey: key,
+        })
+      );
+
+      setTimeout(() => {
+        toast.success("Your post is deleted");
+      }, 700);
+    },
+  });
   const handleUsernameClick = (e) => {
     e.stopPropagation();
   };
@@ -70,81 +91,82 @@ export default function Post({
   };
 
   return (
-    <Card
-      className="w-full max-w-2xl border-x-0 pb-1 pt-2 mx-auto gap-0 rounded-none cursor-pointer"
-      onClick={handlePostClick}
-    >
-      <CardHeader className="flex flex-row px-2  items-start">
-        <div
-          onClick={(e) => {
-            e.stopPropagation();
-            router.push(`/${username}`);
-          }}
-          className="cursor-pointer "
-        >
-          <Avatar className="transition-all duration-500 size-10 hover:backdrop-brightness-90 hover:outline-2">
-            <AvatarImage src={`${avatarUrl}`} />
-            <AvatarFallback>{name?.[0] ?? "U"}</AvatarFallback>
-          </Avatar>
-        </div>
-        <div className="flex-1">
-          <div className="flex justify-between items-center">
-            <div className="">
-              <div className="font-semibold">{name}</div>
-              <div className="text-sm text-muted-foreground">
-                <Link
-                  className="hover:underline hover:underline-offset-2 text-black font-bold"
-                  href={`/${username}`}
-                  onClick={handleUsernameClick}
-                >
-                  @{username}
-                </Link>
-                · {timeago}
-              </div>
-            </div>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <MoreHorizontal className="w-4 h-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                {session?.user.username === username && (
-                  <DropdownMenuItem
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      DeletePost(id);
-                    }}
-                    className="font-bold"
-                  >
-                    Delete
-                  </DropdownMenuItem>
-                )}
-
-                <DropdownMenuItem
-                  className="font-bold"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  Block @{username}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+    <div>
+      <Card
+        className="w-full max-w-2xl border-x-0 pb-1 pt-2 mx-auto gap-0 rounded-none cursor-pointer"
+        onClick={handlePostClick}
+      >
+        <CardHeader className="flex flex-row px-2  items-start">
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/${username}`);
+            }}
+            className="cursor-pointer "
+          >
+            <Avatar className="transition-all duration-500 size-10 hover:backdrop-brightness-90 hover:outline-2">
+              <AvatarImage src={`${avatarUrl}`} />
+              <AvatarFallback>{name?.[0] ?? "U"}</AvatarFallback>
+            </Avatar>
           </div>
-          <div className="mt-2 whitespace-pre-wrap pl-2">{content}</div>
-          {images && images.length > 0 && (
-            <CardContent className="pl-2 mt-2.5">
-              <Imagespace images={images} />
-            </CardContent>
-          )}
-        </div>
-      </CardHeader>
+          <div className="flex-1">
+            <div className="flex justify-between items-center">
+              <div className="">
+                <div className="font-semibold">{name}</div>
+                <div className="text-sm text-muted-foreground">
+                  <Link
+                    className="hover:underline hover:underline-offset-2 text-black font-bold"
+                    href={`/${username}`}
+                    onClick={handleUsernameClick}
+                  >
+                    @{username}
+                  </Link>
+                  · {timeago}
+                </div>
+              </div>
 
-      {/* {tags?.length ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <MoreHorizontal className="w-4 h-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  {session?.user.username === username && (
+                    <DropdownMenuItem
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        deletePost(id);
+                      }}
+                      className="font-bold"
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  )}
+
+                  <DropdownMenuItem
+                    className="font-bold"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    Block @{username}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+            <div className="mt-2 whitespace-pre-wrap pl-2">{content}</div>
+            {images && images.length > 0 && (
+              <CardContent className="pl-2 mt-2.5">
+                <Imagespace images={images} />
+              </CardContent>
+            )}
+          </div>
+        </CardHeader>
+
+        {/* {tags?.length ? (
       <CardContent className="flex flex-wrap gap-2 mt-2 px-6">
       {tags.slice(0, 3).map((tag) => (
         <Badge variant="outline" key={tag}>
@@ -159,38 +181,43 @@ export default function Post({
           </CardContent>
           ) : null} */}
 
-      <CardFooter className="flex justify-between px-6 pl-14 mt-2 pb-1 text-muted-foreground">
-        <Button
-          variant="ghost"
-          size="sm"
-          className="flex gap-1 items-center"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <MessageCircle className="w-4 h-4" />
-          <span>6</span>
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="flex gap-1 items-center"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Repeat2 className="w-4 h-4" />
-          <span>122</span>
-        </Button>
-        <Button
-          variant="ghost"
-          size="sm"
-          className="flex gap-1 items-center"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <Heart className="w-4 h-4" />
-          <span>183</span>
-        </Button>
-        <Button variant="ghost" size="sm" onClick={(e) => e.stopPropagation()}>
-          <Bookmark className="w-4 h-4" />
-        </Button>
-      </CardFooter>
-    </Card>
+        <CardFooter className="flex justify-between px-6 pl-14 mt-2 pb-1 text-muted-foreground">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex gap-1 items-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <MessageCircle className="w-4 h-4" />
+            <span>6</span>
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex gap-1 items-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Repeat2 className="w-4 h-4" />
+            <span>122</span>
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="flex gap-1 items-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Heart className="w-4 h-4" />
+            <span>183</span>
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Bookmark className="w-4 h-4" />
+          </Button>
+        </CardFooter>
+      </Card>
+    </div>
   );
 }

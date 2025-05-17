@@ -1,5 +1,7 @@
 import ProfilePage from "./profilepage";
 import { prisma } from "@/lib/prisma";
+
+
 export default async function UserProfilePage({ params }) {
   const { username } = params;
   const userPlusPosts = await prisma.user.findUnique({
@@ -8,12 +10,17 @@ export default async function UserProfilePage({ params }) {
     },
     select: {
       name: true,
-      username: true,
       avatarUrl: true,
       createdAt: true,
       id: true,
       posts: {
         select: {
+          author: {
+            select: {
+              avatarUrl: true,
+              username: true,
+            },
+          },
           id: true,
           content: true,
           createdAt: true,
@@ -28,7 +35,7 @@ export default async function UserProfilePage({ params }) {
 
   return (
     <div>
-      <ProfilePage userPlusPosts={userPlusPosts} />
+      <ProfilePage username={username} userPlusPosts={userPlusPosts} />
     </div>
   );
 }

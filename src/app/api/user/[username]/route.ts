@@ -24,7 +24,9 @@ export async function GET(
         createdAt: true,
         id: true,
         posts: {
+          orderBy: { createdAt: "desc" },
           select: {
+            author: { select: { username: true, avatarUrl: true } },
             id: true,
             content: true,
             createdAt: true,

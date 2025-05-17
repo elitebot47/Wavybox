@@ -23,6 +23,7 @@ import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { usePostModalStore } from "@/store/postStore";
 import { useMobileStore } from "@/store/isMobileStore";
+import { revalidatePath } from "next/cache";
 
 interface imageData {
   url: string;

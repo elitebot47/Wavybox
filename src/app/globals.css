@@ -2,7 +2,23 @@
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
-
+@keyframes spill {
+  0% {
+    left: -40%;
+    width: 40%;
+  }
+  60% {
+    left: 100%;
+    width: 60%;
+  }
+  100% {
+    left: 100%;
+    width: 40%;
+  }
+}
+.animate-spill {
+  animation: spill 1.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);

@@ -1,20 +1,16 @@
 "use client";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
-// import axios from "axios";
 import { useSession } from "next-auth/react";
-import Post from "@/components/feed/post";
-import { motion } from "framer-motion";
+import PostArea from "@/components/feed/postarea";
 
-export default function ProfilePage({ userPlusPosts }: any) {
+export default function ProfilePage({ userPlusPosts, username }) {
   console.log(userPlusPosts);
   const { data: session } = useSession();
 
   return (
     <div className="max-w-2xl mx-auto">
-      {/* Banner */}
       <div className="h-40 bg-gray-200 dark:bg-gray-700 rounded-b-lg" />
-      {/* Avatar and Edit Button */}
       <div className="flex items-end justify-between px-4 -mt-12">
         <img
           src={userPlusPosts?.avatarUrl}
@@ -46,7 +42,7 @@ export default function ProfilePage({ userPlusPosts }: any) {
             </Badge>
           )}
         </div> */}
-        <div className="text-gray-500">@{userPlusPosts?.username}</div>
+        <div className="text-gray-500">@{username}</div>
         <div className="flex items-center gap-4 text-gray-500 mt-2">
           {/* {user.location && (
             <span>
@@ -100,26 +96,15 @@ export default function ProfilePage({ userPlusPosts }: any) {
           )
         )}
       </div>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ opacity: { duration: 0.8 } }}
-        className=" flex flex-col    overflow-hidden border-t-0"
-      >
-        {userPlusPosts?.posts.map((post) => (
-          <Post
-            avatarUrl={userPlusPosts.avatarUrl}
-            name={userPlusPosts?.name}
-            key={post.id}
-            id={post?.id}
-            images={post?.images}
-            username={userPlusPosts.username}
-            content={post?.content}
-            createdAt={post?.createdAt}
-            userId={userPlusPosts?.id}
-          />
-        ))}
-      </motion.div>
+      <div>
+        <PostArea
+          userid={session.user.id}
+          initialposts={userPlusPosts.posts}
+          username={username}
+          queryKey={["user-posts", username]}
+          queryParams={{ username }}
+        />
+      </div>
     </div>
   );
 }

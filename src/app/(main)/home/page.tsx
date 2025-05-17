@@ -1,6 +1,5 @@
 import PostArea from "@/components/feed/postarea";
 import Postform from "@/components/feed/postform";
-import DownBar from "@/components/layout/downbar";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { Post as PostType } from "@prisma/client";
@@ -16,7 +15,7 @@ export default async function Home() {
   const posts: PostType[] = await prisma.post.findMany({
     include: {
       author: {
-        select: { username: true },
+        select: { username: true, avatarUrl: true },
       },
       images: {
         select: {
@@ -27,11 +26,17 @@ export default async function Home() {
     },
     orderBy: { createdAt: "desc" },
   });
+  console.log(posts);
 
   return (
     <div className="flex flex-col  ">
       <Postform className="lg:flex hidden" userid={session.user.id} />
-      <PostArea userid={session.user.id} intialposts={posts} />
+      <PostArea
+        initialposts={posts}
+        userid={session.user.id}
+        queryKey={["allposts"]}
+        queryParams={{}}
+      />
     </div>
   );
 }

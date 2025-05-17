@@ -6,6 +6,7 @@ import RightSideBar from "@/components/layout/rightSidebar";
 import AnimationLayout from "@/components/animationlayout";
 import Modals from "@/components/modal";
 import DownBar from "@/components/layout/downbar";
+
 export default async function MainLayout({
   children,
 }: {

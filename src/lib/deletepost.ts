@@ -4,14 +4,10 @@ import { toast } from "sonner";
 export default async function DeletePost(postid: number) {
   try {
     await axios.delete(`/api/post`, {
-      data: {
-        postId: postid,
-      },
+      data: { postId: postid },
     });
-    toast.success("Your post is deleted");
-    return;
   } catch (error) {
     toast.error("Error while deleting post!");
-    return;
+    throw error;
   }
 }
