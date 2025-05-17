@@ -8,15 +8,17 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   name      String?
-  username  String   @unique
-  email     String   @unique
+  username  String    @unique
+  email     String    @unique
   password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  avatarUrl String   @default("")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  avatarUrl String    @default("")
   posts     Post[]
+  followers Follows[] @relation("followers")
+  following Follows[] @relation("following")
 }
 
 model Post {
@@ -35,4 +37,14 @@ model Image {
   publicId  String
   postId    Int
   post      Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+}
+
+model Follows {
+  id          Int  @id @default(autoincrement())
+  followerId  Int
+  followingId Int
+  follower    User @relation("following", fields: [followerId], references: [id])
+  following   User @relation("followers", fields: [followingId], references: [id])
+
+  @@unique([followerId, followingId])
 }

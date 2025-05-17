@@ -76,7 +76,7 @@ export default function Post({
       );
 
       setTimeout(() => {
-        toast.success("Your post is deleted");
+        toast.warning("Your post is deleted");
       }, 700);
     },
   });
@@ -139,6 +139,7 @@ export default function Post({
                       onClick={(e) => {
                         e.stopPropagation();
                         deletePost(id);
+                        router.replace("/home");
                       }}
                       className="font-bold"
                     >
