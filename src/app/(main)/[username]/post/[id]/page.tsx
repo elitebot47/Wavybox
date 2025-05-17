@@ -27,8 +27,8 @@ export default function Postview({ params }) {
 
   return (
     <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
+      initial={{ opacity: 0, y: 200 }}
+      animate={{ opacity: 1, y: 0 }}
       transition={{ opacity: { duration: 0.8 } }}
       className=" flex flex-col    overflow-hidden border-t-0"
     >

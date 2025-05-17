@@ -31,12 +31,7 @@ export default async function Home() {
   return (
     <div className="flex flex-col  ">
       <Postform className="lg:flex hidden" userid={session.user.id} />
-      <PostArea
-        initialposts={posts}
-        userid={session.user.id}
-        queryKey={["allposts"]}
-        queryParams={{}}
-      />
+      <PostArea initialposts={posts} queryKey={["allposts"]} queryParams={{}} />
     </div>
   );
 }

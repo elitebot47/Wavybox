@@ -1,7 +1,6 @@
 "use client";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
-import { Button } from "./button";
 import Loader from "./loader";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -17,11 +16,12 @@ export function SignOutButton({ className }: { className?: string }) {
     <button
       className={`${className}   `}
       onClick={() => {
+        setLoaderstate(true);
         signOut({ callbackUrl: "/signin" });
-        toast.error("Logging out..");
+        toast.info("Logging out..");
       }}
     >
-      {loaderstate ? <Loader className="text-white" /> : "Signout"}
+      {loaderstate ? <Loader className="text-black" /> : "Signout"}
     </button>
   );
 }

@@ -1,3 +1,4 @@
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 interface CloudinaryImage {
@@ -10,14 +11,19 @@ interface PostCreds {
   userid: number;
   images: CloudinaryImage[];
 }
+
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  const session = await auth();
+  if (!session) {
+    return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
+  }
   try {
-    const { content, userid, images }: PostCreds = await req.json();
+    const { content, images }: PostCreds = await req.json();
     console.log("now trying to create post in db");
     await prisma.post.create({
       data: {
         content,
-        authorId: Number(userid),
+        authorId: Number(session.user.id),
         images: {
           create: images.map((img) => ({
             secureUrl: img.url,
@@ -66,11 +72,20 @@ export async function GET() {
 }
 
 export async function DELETE(req: NextRequest) {
+  const session = await auth();
   const { postId } = await req.json();
+
   try {
-    await prisma.post.delete({
-      where: { id: postId },
+    const deletedStatus = await prisma.post.deleteMany({
+      where: { id: postId, authorId: Number(session.user.id) },
     });
+    if (deletedStatus.count === 0) {
+      return NextResponse.json(
+        { error: "Not authorized or post not found" },
+        { status: 409 }
+      );
+    }
+
     return NextResponse.json({
       message: " Your post was deleted",
     });

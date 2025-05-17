@@ -98,7 +98,6 @@ export default function ProfilePage({ userPlusPosts, username }) {
       </div>
       <div>
         <PostArea
-          userid={session.user.id}
           initialposts={userPlusPosts.posts}
           username={username}
           queryKey={["user-posts", username]}

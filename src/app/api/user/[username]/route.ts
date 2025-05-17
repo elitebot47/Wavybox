@@ -6,12 +6,7 @@ export async function GET(
   { params }: { params: { username: string } }
 ) {
   const { username } = params;
-  if (!username) {
-    return NextResponse.json(
-      { message: "invalid input(params)" },
-      { status: 400 }
-    );
-  }
+
   try {
     const userPlusPosts = await prisma.user.findUnique({
       where: {
@@ -22,7 +17,6 @@ export async function GET(
         username: true,
         avatarUrl: true,
         createdAt: true,
-        id: true,
         posts: {
           orderBy: { createdAt: "desc" },
           select: {
@@ -31,7 +25,6 @@ export async function GET(
             content: true,
             createdAt: true,
             images: true,
-            createdAt: true,
           },
         },
       },

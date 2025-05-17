@@ -1,7 +1,6 @@
 import ProfilePage from "./profilepage";
 import { prisma } from "@/lib/prisma";
 
-
 export default async function UserProfilePage({ params }) {
   const { username } = params;
   const userPlusPosts = await prisma.user.findUnique({
@@ -12,7 +11,6 @@ export default async function UserProfilePage({ params }) {
       name: true,
       avatarUrl: true,
       createdAt: true,
-      id: true,
       posts: {
         select: {
           author: {

@@ -23,6 +23,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePostModalStore } from "@/store/postStore";
 import { SignOutButton } from "../ui/SignButtons";
+import { easeIn, easeInOut, easeOut, motion } from "framer-motion";
 
 const navItems = [
   { href: "/home", icon: LucideHome, label: "Home" },
@@ -36,10 +37,14 @@ export default function LeftSideBar() {
   const { openModal } = usePostModalStore();
   const pathname = usePathname();
   const { data: session } = useSession();
-  const userid = session?.user.id;
 
   return (
-    <div className="flex flex-col items-center justify-center gap-2 h-full">
+    <motion.div
+      initial={{ x: -300, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 1, ease: easeOut }}
+      className="flex flex-col items-center justify-center gap-2 h-full"
+    >
       <div className="w-[230px] h-24 flex border-2 rounded-lg px-3 gap-1.5">
         <div className="flex justify-center items-center">
           <Link href={`${session.user.username}`} aria-label={"My profile"}>
@@ -55,7 +60,7 @@ export default function LeftSideBar() {
         </div>
         <div
           className="flex px-2
-         justify-center items-center"
+          justify-center items-center"
         >
           <DropdownMenu>
             <DropdownMenuTrigger>
@@ -88,6 +93,6 @@ export default function LeftSideBar() {
         className="w-[150px] justify-center bg-black text-white"
         label="Post"
       />
-    </div>
+    </motion.div>
   );
 }

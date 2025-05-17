@@ -31,7 +31,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Progress } from "../ui/progress";
 
 function getShortRelativeTime(date: Date | string) {
   const full = formatDistanceToNowStrict(new Date(date), { addSuffix: true });
@@ -56,7 +55,6 @@ export default function Post({
   content,
   name,
   createdAt,
-  userId,
   images,
   tags,
   id,
@@ -67,7 +65,7 @@ export default function Post({
   const timeago = getShortRelativeTime(createdAt);
   const { data: session } = useSession();
 
-  const { mutate: deletePost, isPending } = useMutation({
+  const { mutate: deletePost } = useMutation({
     mutationFn: DeletePost,
     onSuccess: () => {
       const keys = [["allposts"], ["user-posts", username]];

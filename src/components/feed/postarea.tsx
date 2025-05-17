@@ -1,4 +1,3 @@
-// components/feed/PostArea.tsx
 "use client";
 import { useQuery } from "@tanstack/react-query";
 import { Progress } from "../ui/progress";
@@ -11,7 +10,6 @@ interface PostAreaProps {
   username?: string;
   queryKey?: any[];
   queryParams?: Record<string, any>; //object type with string keys and values of any type
-  userid: number;
 }
 
 export default function PostArea({
@@ -19,11 +17,10 @@ export default function PostArea({
   username,
   queryKey,
   queryParams,
-  userid,
 }: PostAreaProps) {
   const test = fetchPosts(queryParams);
   const { data = [], isFetching } = useQuery({
-    queryKey: queryKey || ["posts"],
+    queryKey,
     queryFn: () => fetchPosts(queryParams),
     initialData: initialposts,
   });

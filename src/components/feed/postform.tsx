@@ -23,30 +23,27 @@ import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { usePostModalStore } from "@/store/postStore";
 import { useMobileStore } from "@/store/isMobileStore";
-import { revalidatePath } from "next/cache";
+import { useQueryClient } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 interface imageData {
   url: string;
   public_id: string;
 }
 
-export default function Postform({
-  userid,
-  className,
-}: {
-  userid: number;
-  className?: string;
-}) {
+export default function Postform({ className }: { className?: string }) {
+  const { data: session, status } = useSession();
+  const queryClient = useQueryClient();
   const { closeModal } = usePostModalStore();
   const [posting, setPosting] = useState(false);
-  const userId = userid;
   const [postTextcontent, setpostTextcontent] = useState("");
   const [language, setLanguage] = useState("");
   const [ailoader, setAiloader] = useState(false);
   const [imageloader, setimageloader] = useState(false);
   const [imagesArray, setimagesArray] = useState<imageData[]>([]);
   const { ismobile } = useMobileStore();
-
+  const router = useRouter();
   async function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const files: any = event.target.files;
     if (!files || files.length === 0) return;
@@ -98,6 +95,13 @@ export default function Postform({
 
   async function Handlepost() {
     setPosting(true);
+    if (status == "unauthenticated") {
+      toast.error("You are not logged in!");
+      router.replace("/Sigin");
+      toast.info("Login now");
+      setPosting(false);
+      return;
+    }
 
     if (!postTextcontent.trim() && imagesArray.length === 0) {
       toast.error("Post cannot be empty");
@@ -108,11 +112,19 @@ export default function Postform({
     try {
       await axios.post("/api/post", {
         content: postTextcontent,
-        userid: userId,
         images: imagesArray,
       });
+
+      const keys = [["allposts"], ["user-posts", session.user.username]];
+      keys.forEach((key) =>
+        queryClient.invalidateQueries({
+          queryKey: key,
+        })
+      );
+      setTimeout(() => {
+        toast.success("Post published successfully");
+      }, 1000);
       closeModal();
-      toast.success("Post published successfully");
       setpostTextcontent("");
       setimagesArray([]);
       setPosting(false);
