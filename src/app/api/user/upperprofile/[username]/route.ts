@@ -8,7 +8,7 @@ export async function GET(
   const { username } = params;
 
   try {
-    const userPlusPosts = await prisma.user.findUnique({
+    const userdata: {} = await prisma.user.findUnique({
       where: {
         username,
       },
@@ -16,28 +16,13 @@ export async function GET(
         name: true,
         avatarUrl: true,
         createdAt: true,
-        posts: {
-          select: {
-            author: {
-              select: {
-                avatarUrl: true,
-                username: true,
-              },
-            },
-            id: true,
-            content: true,
-            createdAt: true,
-            images: true,
-          },
-          orderBy: {
-            createdAt: "desc",
-          },
-        },
         following: true,
         followers: true,
+        username: true,
       },
     });
-    return NextResponse.json({ userPlusPosts });
+
+    return NextResponse.json(userdata);
   } catch (error) {
     return NextResponse.json(
       {

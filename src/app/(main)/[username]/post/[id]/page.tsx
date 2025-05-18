@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Post from "@/components/feed/post";
 import axios from "axios";
 import React from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import Loader from "@/components/ui/loader";
 export default function Postview({ params }) {
   const { id, username }: { id: number; username: string } = React.use(params);

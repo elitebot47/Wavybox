@@ -14,17 +14,14 @@ interface PostAreaProps {
 
 export default function PostArea({
   initialposts,
-  username,
   queryKey,
   queryParams,
 }: PostAreaProps) {
-  const test = fetchPosts(queryParams);
   const { data = [], isFetching } = useQuery({
     queryKey,
     queryFn: () => fetchPosts(queryParams),
     initialData: initialposts,
   });
-  console.log(test);
 
   return (
     <div className="!mb-16">

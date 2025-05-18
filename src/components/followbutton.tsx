@@ -1,41 +1,56 @@
 "use client";
 import { Button } from "./ui/button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Loader from "./ui/loader";
 import axios from "axios";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
+import { useQueryClient } from "@tanstack/react-query";
 
-export default function FollowButton({ username, isFollowingInitial }) {
+export default function FollowButton({ username, userProfileData }) {
+  const queryClient = useQueryClient();
   const { data: session } = useSession();
-  const [loading, setLoading] = useState(false);
-
+  const isFollowingInitial = Boolean(
+    userProfileData.followers.find((f) => f.followerId == session?.user?.id)
+  );
   const [follow, setFollow] = useState(isFollowingInitial);
+  const [loading, setLoading] = useState(false);
 
   async function handleFollow() {
     setLoading(true);
     try {
       if (follow) {
         const res = await axios.delete(`/api/follow/${username}`);
-        toast.success(res.data.message || "Unfollowed successfully");
+        toast.info(res.data.message || "Unfollowed successfully");
         setFollow(false);
       } else {
         const res = await axios.post(`/api/follow/${username}`);
-        toast.success(res.data.message || "Followed successfully");
+        toast.info(res.data.message || "Followed successfully");
         setFollow(true);
       }
+      queryClient.invalidateQueries({
+        queryKey: ["user-profile", username],
+      });
     } catch (error) {
-      toast.error(
-        error?.response?.data?.error || "Unexpected Error, try again later"
-      );
+      toast.error(`${error?.response?.data}`);
     } finally {
       setLoading(false);
+      return;
     }
   }
 
   return (
-    <Button onClick={handleFollow} disabled={loading}>
-      {loading ? <Loader /> : follow ? "Unfollow" : "Follow"}
+    <Button className="" onClick={() => handleFollow()} disabled={loading}>
+      {loading ? (
+        <Loader
+          className=" w-auto !text-white
+        "
+        />
+      ) : follow ? (
+        "Unfollow"
+      ) : (
+        "Follow"
+      )}
     </Button>
   );
 }

@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import axios from "axios";
 import Loader from "../ui/loader";
 import {
@@ -13,7 +13,14 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Separator } from "@/components/ui/separator";
-import { CircleX, Image, LanguagesIcon, PencilIcon } from "lucide-react";
+import {
+  Check,
+  CircleX,
+  Image,
+  LanguagesIcon,
+  PencilIcon,
+  Plus,
+} from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -26,6 +33,7 @@ import { useMobileStore } from "@/store/isMobileStore";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Fascinate } from "next/font/google";
 
 interface imageData {
   url: string;
@@ -43,6 +51,8 @@ export default function Postform({ className }: { className?: string }) {
   const [imageloader, setimageloader] = useState(false);
   const [imagesArray, setimagesArray] = useState<imageData[]>([]);
   const { ismobile } = useMobileStore();
+  const postcontentRef = useRef(null);
+  const [AiacceptButton, setAiacceptButton] = useState(false);
   const router = useRouter();
   async function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const files: any = event.target.files;
@@ -74,6 +84,7 @@ export default function Postform({ className }: { className?: string }) {
   async function Aicontent(processtype: string) {
     setAiloader(true);
     const postcontent = postTextcontent.trim();
+    postcontentRef.current = postcontent;
     if (!postcontent) {
       toast.error("Post cannot be empty");
       setAiloader(false);
@@ -86,6 +97,7 @@ export default function Postform({ className }: { className?: string }) {
         processtype,
       });
       setpostTextcontent(aiResult.data.message);
+      setAiacceptButton(true);
       setAiloader(false);
     } catch (error) {
       toast.error("AI features not currently available");
@@ -150,12 +162,33 @@ export default function Postform({ className }: { className?: string }) {
         {ailoader && (
           <Skeleton className="w-full min-h-[50px] max-h-full"></Skeleton>
         )}
-
+        {AiacceptButton && (
+          <div className="fixed" onClick={(e) => e.stopPropagation}>
+            <div className="absolute -top-3 -left-3 z-50 flex">
+              <Button
+                onClick={() => setAiacceptButton(false)}
+                className="  text-green-400 p-2 bg-black/70 hover:bg-black  h-7 rounded-none rounded-l-full "
+              >
+                <Check className="size-7"></Check>
+              </Button>
+              <Separator orientation="vertical" color="black"></Separator>
+              <Button
+                onClick={() => {
+                  setpostTextcontent(postcontentRef.current);
+                  setAiacceptButton(false);
+                }}
+                className="text-red-500   h-7 rounded-none rounded-r-full hover:bg-black  bg-black/70"
+              >
+                <Plus className="rotate-45 size-7"></Plus>
+              </Button>
+            </div>
+          </div>
+        )}
         <Textarea
           autoFocus
           maxLength={150}
           value={postTextcontent}
-          disabled={ailoader || posting}
+          disabled={ailoader || posting || AiacceptButton}
           hidden={ailoader}
           className=" whitespace-pre-wrap   resize-none !text-lg textarea-class p-2 text-gray-800 placeholder:text-gray-400 w-full min-h-[50px] outline-none border-none !border-0 !shadow-none focus:!ring-0 focus:!ring-offset-0 rounded-none"
           onChange={(e) => setpostTextcontent(e.target.value)}

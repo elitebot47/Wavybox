@@ -1,10 +1,9 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { toast } from "sonner";
 
 export async function POST(
-  req: NextResponse,
+  req: NextRequest,
   { params }: { params: { username: string } }
 ) {
   const { username } = params;
@@ -42,10 +41,12 @@ export async function POST(
     });
     console.log("i followed someone");
 
-    toast.info(`You followed ${username}`);
     return NextResponse.json({ message: `You followed ${username}` });
   } catch (error) {
-    return NextResponse.json({ message: "Already following" }, { status: 409 });
+    return NextResponse.json(
+      { message: "Already following,or error:" },
+      { status: 409 }
+    );
   }
 }
 export async function DELETE(
@@ -71,9 +72,11 @@ export async function DELETE(
         followingId: Number(followingUser.id),
       },
     });
-    toast.info(`You unfollowed ${followingUser}`);
     return NextResponse.json({ message: `You unfollowed ${username}` });
   } catch (error) {
-    return NextResponse.json({ message: "Unexpected error!" }, { status: 409 });
+    return NextResponse.json(
+      { message: `Unexpected error! ${error}` },
+      { status: 409 }
+    );
   }
 }
