@@ -25,7 +25,7 @@ export default async function MainLayout({
         </aside>
         <aside className="lg:hidden block">
           <div className="block lg:hidden fixed bottom-0 left-0 right-0 z-50">
-            <DownBar className="flex justify-around items-center shadow-2xl shadow-black bg-white " />
+            <DownBar className="lg:hidden block justify-around items-center shadow-2xl shadow-black bg-white " />
           </div>
         </aside>
         <Modals></Modals>
@@ -33,7 +33,7 @@ export default async function MainLayout({
           {children}
         </main>
 
-        <aside className="hidden xl:block xl:w-[290px] z-[20] sticky top-0 h-screen">
+        <aside className="hidden lg:block xl:w-[290px] z-[20] sticky top-0 h-screen">
           <RightSideBar />
         </aside>
       </div>

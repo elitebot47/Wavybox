@@ -59,17 +59,27 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
   }
 }
 export async function DELETE(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const public_id = searchParams.get("publicId");
-  if (!public_id) {
-    return NextResponse.json({
-      error: "publicID is null",
-    });
+  const { publicIdArray } = await req.json();
+  console.log(publicIdArray);
+
+  if (publicIdArray.length === 0) {
+    return NextResponse.json(
+      { message: "No public IDs provided" },
+      { status: 400 }
+    );
   }
-  await cloudinary.uploader.destroy(public_id, {
-    invalidate: true,
-  });
-  return NextResponse.json({
-    message: "success",
-  });
+  try {
+    await Promise.all(
+      publicIdArray.map((id) =>
+        cloudinary.uploader.destroy(id, {
+          invalidate: true,
+        })
+      )
+    );
+    return NextResponse.json({
+      message: "success",
+    });
+  } catch (error) {
+    return NextResponse.json({ error });
+  }
 }

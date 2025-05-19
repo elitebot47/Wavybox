@@ -7,6 +7,7 @@ import Loader from "./loader";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
+
 export default function Deleteuserbut() {
   const { data: session } = useSession();
   const router = useRouter();
@@ -18,6 +19,7 @@ export default function Deleteuserbut() {
         userid: session?.user.id,
       });
       setLoader(false);
+      toast.success("Account deleted successfully");
       router.push("/signup");
     } catch (error) {
       toast.error("Server error , try again later");

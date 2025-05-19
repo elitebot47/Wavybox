@@ -31,6 +31,8 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import axios from "axios";
+import { useState } from "react";
 
 function getShortRelativeTime(date: Date | string) {
   const full = formatDistanceToNowStrict(new Date(date), { addSuffix: true });
@@ -62,8 +64,10 @@ export default function Post({
 }: UserPost & { tags?: string[] }) {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const publicIdArray = [];
   const timeago = getShortRelativeTime(createdAt);
   const { data: session } = useSession();
+  images.forEach((image) => publicIdArray.push(image.publicId));
 
   const { mutate: deletePost } = useMutation({
     mutationFn: DeletePost,
@@ -136,9 +140,17 @@ export default function Post({
                 <DropdownMenuContent>
                   {session?.user.username === username && (
                     <DropdownMenuItem
-                      onClick={(e) => {
+                      onClick={async (e) => {
                         e.stopPropagation();
+                        if (publicIdArray.length > 0) {
+                          await axios.delete(`/api/post/media/`, {
+                            data: {
+                              publicIdArray,
+                            },
+                          });
+                        }
                         deletePost(id);
+
                         router.replace("/home");
                       }}
                       className="font-bold"

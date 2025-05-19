@@ -228,9 +228,11 @@ export default function Postform({ className }: { className?: string }) {
                     setimagesArray((prev) =>
                       prev.filter((img) => img.public_id != image.public_id)
                     );
-                    await axios.delete(
-                      `/api/post/media?publicId=${image.public_id}`
-                    );
+                    await axios.delete(`/api/post/media/`, {
+                      params: {
+                        publicIdArray: [image.public_id],
+                      },
+                    });
                   }}
                 >
                   <CircleX size={29}></CircleX>
