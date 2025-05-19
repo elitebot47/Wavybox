@@ -48,7 +48,7 @@ export default async function ProfilePage({
   return (
     <div className="max-w-2xl mx-auto">
       <UpperProfile initialData={userPlusPosts}></UpperProfile>
-      <LowerProfile userPlusPosts={userPlusPosts}></LowerProfile>
+      <LowerProfile initialData={userPlusPosts}></LowerProfile>
     </div>
   );
 }

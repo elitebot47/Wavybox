@@ -164,10 +164,15 @@ export default function Postform({ className }: { className?: string }) {
         )}
         {AiacceptButton && (
           <div className="fixed" onClick={(e) => e.stopPropagation}>
-            <div className="absolute -top-3 -left-3 z-50 flex">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 100, y: 0 }}
+              transition={{ duration: 0.5 }}
+              className="absolute -top-4 -left-3 z-50 flex"
+            >
               <Button
                 onClick={() => setAiacceptButton(false)}
-                className="  text-green-400 p-2 bg-black/70 hover:bg-black  h-7 rounded-none rounded-l-full "
+                className="  text-white p-2 transition-all duration-500 bg-black/70 hover:bg-black  h-7 rounded-none rounded-l-full "
               >
                 <Check className="size-7"></Check>
               </Button>
@@ -177,11 +182,11 @@ export default function Postform({ className }: { className?: string }) {
                   setpostTextcontent(postcontentRef.current);
                   setAiacceptButton(false);
                 }}
-                className="text-red-500   h-7 rounded-none rounded-r-full hover:bg-black  bg-black/70"
+                className="text-white transition-all duration-500   h-7 rounded-none rounded-r-full hover:bg-black  bg-black/70"
               >
                 <Plus className="rotate-45 size-7"></Plus>
               </Button>
-            </div>
+            </motion.div>
           </div>
         )}
         <Textarea
@@ -190,7 +195,11 @@ export default function Postform({ className }: { className?: string }) {
           value={postTextcontent}
           disabled={ailoader || posting || AiacceptButton}
           hidden={ailoader}
-          className=" whitespace-pre-wrap   resize-none !text-lg textarea-class p-2 text-gray-800 placeholder:text-gray-400 w-full min-h-[50px] outline-none border-none !border-0 !shadow-none focus:!ring-0 focus:!ring-offset-0 rounded-none"
+          className={`${
+            AiacceptButton ? "blink" : ""
+          } whitespace-pre-wrap   resize-none !text-lg textarea-class p-2 ${
+            AiacceptButton && "mt-3.5"
+          } text-gray-800 placeholder:text-gray-400 w-full min-h-[50px] outline-none border-none !border-0 !shadow-none focus:!ring-0 focus:!ring-offset-0 rounded-none`}
           onChange={(e) => setpostTextcontent(e.target.value)}
           placeholder="so what's on your mood?"
         />

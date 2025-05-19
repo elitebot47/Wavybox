@@ -7,6 +7,8 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { Calendar } from "lucide-react";
 export default function UpperProfile({ initialData }) {
+  console.log(initialData);
+
   const { data: session } = useSession();
 
   const { data = [] } = useQuery({
