@@ -50,7 +50,7 @@ export default function HomePage({ initialposts }) {
           }}
         />
       </div>
-      <Postform className="lg:flex hidden" userid={session?.user?.id} />
+      <Postform className="lg:flex hidden" />
 
       {allposts ? (
         <PostArea

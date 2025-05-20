@@ -33,7 +33,6 @@ import { useMobileStore } from "@/store/isMobileStore";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { Fascinate } from "next/font/google";
 
 interface imageData {
   url: string;
