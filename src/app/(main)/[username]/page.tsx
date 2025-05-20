@@ -3,11 +3,7 @@ import { prisma } from "@/lib/prisma";
 import UpperProfile from "@/components/profilepage/upperhalf";
 import LowerProfile from "@/components/profilepage/lowerhalf";
 
-export default async function ProfilePage({
-  params,
-}: {
-  params: { username: string };
-}) {
+export default async function ProfilePage({ params }: { params: { username: string } }) {
   const session = await auth();
   if (!session) {
     return <div>Not authenticated , go to Signin page</div>;

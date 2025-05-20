@@ -1,11 +1,17 @@
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: Promise<{ username: string }> }
+  { params }: { params: { username: string } }
 ) {
-  const { username } = await params;
+  const session = await auth();
+  const { username } = params;
+
+  if (!session) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
 
   try {
     const userPlusPosts = await prisma.user.findUnique({

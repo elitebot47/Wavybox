@@ -5,7 +5,7 @@ import Postform from "./postform";
 import { useSession } from "next-auth/react";
 import PostArea from "./postarea";
 import FollowingPosts from "./followingpostarea";
-import { alpha, AnimatePresence, motion } from "framer-motion";
+import { motion } from "framer-motion";
 export default function HomePage({ initialposts }) {
   const [allposts, setAllPosts] = useState(true);
   const { data: session } = useSession();

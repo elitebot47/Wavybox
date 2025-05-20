@@ -3,7 +3,10 @@ import { prisma } from "@/lib/prisma";
 export default async function UniqueUsernameGenerator(
   email: string
 ): Promise<string> {
-  const base = email.split("@")[0];
+  let base = email.split("@")[0];
+  if (base.length >= 7) {
+    base = base.substring(0, 7);
+  }
   const seperators = ["-", "_", "~"];
   while (true) {
     const username = `${base}${

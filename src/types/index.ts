@@ -1,10 +1,10 @@
-export interface postImage {
+export interface PostImage {
   secureUrl: string;
   publicId: string;
 }
-export interface UserPost<T = postImage> {
+export interface UserPost<T = PostImage> {
   authorId: number;
-  author: any;
+  author: [];
   username: string;
   content: string;
   name?: string;

@@ -28,11 +28,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import DeletePost from "@/lib/deletepost";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import axios from "axios";
 import { useState } from "react";
+import Loader from "../ui/loader";
 
 function getShortRelativeTime(date: Date | string) {
   const full = formatDistanceToNowStrict(new Date(date), { addSuffix: true });
@@ -69,6 +70,7 @@ export default function Post({
   const { data: session } = useSession();
   const [DeletingStatus, setDeletingStatus] = useState(false);
   images.forEach((image) => publicIdArray.push(image.publicId));
+  const pathname = usePathname();
 
   const { mutate: deletePost } = useMutation({
     mutationFn: DeletePost,
@@ -135,7 +137,11 @@ export default function Post({
                     size="icon"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    <MoreHorizontal className="w-4 h-4" />
+                    {DeletingStatus ? (
+                      <Loader></Loader>
+                    ) : (
+                      <MoreHorizontal className="w-4 h-4" />
+                    )}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
@@ -154,20 +160,23 @@ export default function Post({
                         deletePost(id);
 
                         setDeletingStatus(true);
-                        router.replace("/home");
+                        if (pathname == `/${username}/post/${id}`) {
+                          router.replace("/home");
+                        }
                       }}
                       className="font-bold"
                     >
                       Delete
                     </DropdownMenuItem>
                   )}
-
-                  <DropdownMenuItem
-                    className="font-bold"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    Block @{username}
-                  </DropdownMenuItem>
+                  {session.user.username != username && (
+                    <DropdownMenuItem
+                      className="font-bold"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      Block @{username}
+                    </DropdownMenuItem>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>

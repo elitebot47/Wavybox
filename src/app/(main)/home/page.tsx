@@ -1,12 +1,11 @@
 import HomePage from "@/components/feed/homepage";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Post as PostType } from "@prisma/client";
 import { redirect } from "next/navigation";
 
 export default async function Home() {
   const session = await auth();
-  
+
   if (!session) {
     redirect("/signin");
   }

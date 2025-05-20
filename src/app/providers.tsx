@@ -24,10 +24,7 @@ export default function Providers({
       <ReactQueryProvider>
         {children}
 
-        <Toaster
-          position={isMobile ? "bottom-center" : "top-center"}
-          richColors
-        />
+        <Toaster position={isMobile ? "top-center" : "top-center"} richColors />
       </ReactQueryProvider>
     </SessionProvider>
   );

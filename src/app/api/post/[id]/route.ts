@@ -3,10 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  context: { params: { id: number } }
+  { params }: { params: { id: number } }
 ) {
   try {
-    const { id } = context.params;
+    const { id } = params;
     const post = await prisma.post.findUnique({
       include: {
         author: { select: { username: true, id: true, avatarUrl: true } },

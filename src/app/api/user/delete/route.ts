@@ -23,16 +23,12 @@ export async function POST(req: NextRequest) {
         images: true,
       },
     });
-    console.log("userposts:", UserPosts);
 
     const publicIdArray = UserPosts.flatMap((post) =>
       post.images?.map((image?) => image.publicId)
     );
 
     if (publicIdArray.length > 0) {
-      console.log("now trying to delete images ...");
-      console.log(publicIdArray.length);
-
       await Promise.all(
         publicIdArray.map((id) =>
           cloudinary.uploader.destroy(id, {
@@ -41,8 +37,6 @@ export async function POST(req: NextRequest) {
         )
       );
     }
-    console.log("image delted Succesfully");
-    console.log("now moving to delete other user details");
 
     await prisma.user.delete({
       where: {
