@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { username: string } }
+  { params }: { params: Promise<{ username: string }> }
 ) {
-  const { username } = params;
+  const { username } = await params;
 
   try {
     const userPlusPosts = await prisma.user.findUnique({
@@ -37,6 +37,9 @@ export async function GET(
         followers: true,
       },
     });
+    if (!userPlusPosts) {
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    }
     return NextResponse.json({ userPlusPosts });
   } catch (error) {
     return NextResponse.json(

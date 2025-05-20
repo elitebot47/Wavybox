@@ -67,6 +67,7 @@ export default function Post({
   const publicIdArray = [];
   const timeago = getShortRelativeTime(createdAt);
   const { data: session } = useSession();
+  const [DeletingStatus, setDeletingStatus] = useState(false);
   images.forEach((image) => publicIdArray.push(image.publicId));
 
   const { mutate: deletePost } = useMutation({
@@ -93,7 +94,7 @@ export default function Post({
   };
 
   return (
-    <div>
+    <div className={`${DeletingStatus && "opacity-50"}`}>
       <Card
         className="w-full max-w-2xl border-x-0 pb-1 pt-2 mx-auto gap-0 rounded-none cursor-pointer"
         onClick={handlePostClick}
@@ -141,6 +142,7 @@ export default function Post({
                   {session?.user.username === username && (
                     <DropdownMenuItem
                       onClick={async (e) => {
+                        setDeletingStatus(true);
                         e.stopPropagation();
                         if (publicIdArray.length > 0) {
                           await axios.delete(`/api/post/media/`, {
@@ -151,6 +153,7 @@ export default function Post({
                         }
                         deletePost(id);
 
+                        setDeletingStatus(true);
                         router.replace("/home");
                       }}
                       className="font-bold"
