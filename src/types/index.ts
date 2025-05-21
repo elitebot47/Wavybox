@@ -19,18 +19,3 @@ export interface UserPost<T = PostImage> {
   id: number;
   avatarUrl: string;
 }
-export interface Token {
-  id: number;
-  email: string;
-  username: string;
-  avatarUrl: string;
-}
-export type UserWithPosts = {
-  username: string;
-  name: string;
-  avatarUrl: string;
-  createdAt: string;
-  posts: UserPost<PostImage>[];
-  following: any;
-  followers: any;
-};

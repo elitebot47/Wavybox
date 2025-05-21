@@ -2,7 +2,6 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { verifyPassword } from "./hash";
 import { prisma } from "../lib/prisma";
-import { Token } from "@/types";
 import { JWT } from "next-auth/jwt";
 
 interface Credentials {
