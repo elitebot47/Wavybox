@@ -1,44 +1,37 @@
-"use client";
-import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
 import Post from "@/components/feed/post";
-import axios from "axios";
-import React from "react";
-import Loader from "@/components/ui/loader";
-export default function Postview({ params }) {
-  const { id, username }: { id: number; username: string } = React.use(params);
-  const [post, setPost] = useState(null);
-
-  useEffect(() => {
-    async function Getposts() {
-      const response = await axios.get(`/api/post/${id}`);
-      setPost(response.data.post);
-    }
-    Getposts();
-  }, [id]);
-
-  if (!post)
-    return (
-      <div className="flex justify-center ">
-        <Loader className=""></Loader>
-      </div>
-    );
+import { prisma } from "@/lib/prisma";
+export default async function Postview({
+  params,
+}: {
+  params: { id: number; username: string };
+}) {
+  const { id, username } = params;
+  const post = await prisma.post.findUnique({
+    where: {
+      id: Number(id),
+    },
+    select: {
+      images: true,
+      content: true,
+      createdAt: true,
+      author: {
+        select: {
+          avatarUrl: true,
+        },
+      },
+    },
+  });
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 200 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ opacity: { duration: 0.8 } }}
-      className=" flex flex-col    overflow-hidden border-t-0"
-    >
+    <div className=" flex flex-col    overflow-hidden border-t-0">
       <Post
         avatarUrl={String(post.author.avatarUrl ?? "")}
-        id={Number(post.id)}
-        images={Array(post.images)}
-        username={String(post.author.username)}
+        id={Number(id)}
+        images={post.images}
+        username={String(username)}
         content={String(post.content)}
         createdAt={`${new Date(post.createdAt).getTime()}`}
       />
-    </motion.div>
+    </div>
   );
 }

@@ -195,10 +195,8 @@ export default function Postform({ className }: { className?: string }) {
           disabled={ailoader || posting || AiacceptButton}
           hidden={ailoader}
           className={`${
-            AiacceptButton ? "blink" : ""
-          } whitespace-pre-wrap   resize-none !text-lg textarea-class p-2 ${
-            AiacceptButton && "mt-3.5"
-          } text-gray-800 placeholder:text-gray-400 w-full min-h-[50px] outline-none border-none !border-0 !shadow-none focus:!ring-0 focus:!ring-offset-0 rounded-none`}
+            AiacceptButton ? "blink mt-3.5  " : ""
+          } whitespace-pre-wrap rounded-2xl  resize-none !text-lg textarea-class p-2  text-gray-800 placeholder:text-gray-400 w-full min-h-[50px]  outline-none border-none !border-0 !shadow-none focus:!ring-0 focus:!ring-offset-0 `}
           onChange={(e) => setpostTextcontent(e.target.value)}
           placeholder="so what's on your mood?"
         />
@@ -251,7 +249,11 @@ export default function Postform({ className }: { className?: string }) {
             disabled={imageloader || posting}
           >
             <Label htmlFor="file-upload" className="cursor-pointer">
-              {imageloader ? <Loader></Loader> : <Image></Image>}
+              {imageloader ? (
+                <Loader></Loader>
+              ) : (
+                <Image className="size-6"></Image>
+              )}
               <Input
                 disabled={imageloader}
                 id="file-upload"
@@ -269,9 +271,7 @@ export default function Postform({ className }: { className?: string }) {
             value={language}
             onValueChange={(e) => {
               setLanguage(e);
-              Aicontent(
-                `language translate this to ${e} and dont give any explanation`
-              );
+              Aicontent(`translate to ${e}`);
             }}
           >
             <SelectTrigger className="w-auto h-9 bg-white  border-gray-200">
@@ -296,11 +296,7 @@ export default function Postform({ className }: { className?: string }) {
 
           <Button
             disabled={ailoader || posting}
-            onClick={() =>
-              Aicontent(
-                "fix spelling , grammar  errors  ,dont give any post explantion after giving result ,Adjust my text to follow correct capitalization rules."
-              )
-            }
+            onClick={() => Aicontent("fix spelling grammar and typing error")}
             variant="outline"
             className="h-9 border-gray-200 w-auto"
           >
@@ -322,7 +318,7 @@ export default function Postform({ className }: { className?: string }) {
 
         <Button
           onClick={Handlepost}
-          disabled={posting || ailoader || imageloader}
+          disabled={posting || AiacceptButton || ailoader || imageloader}
           className=" w-auto h-9 bg-black hover:bg-gray-800 text-lg    text-white"
         >
           {posting ? <Loader className="text-white" /> : "Post"}

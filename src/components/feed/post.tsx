@@ -122,7 +122,7 @@ export default function Post({
                 <div className="font-semibold">{name}</div>
                 <div className="text-sm text-muted-foreground">
                   <Link
-                    className="hover:underline hover:underline-offset-2 text-black font-bold"
+                    className="hover:underline hover:underline-offset-2 mr-3 text-black font-bold"
                     href={`/${username}`}
                     onClick={handleUsernameClick}
                   >
