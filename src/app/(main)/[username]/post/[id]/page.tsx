@@ -3,9 +3,9 @@ import { prisma } from "@/lib/prisma";
 export default async function Postview({
   params,
 }: {
-  params: { id: number; username: string };
+  params: Promise<{ id: number; username: string }>;
 }) {
-  const { id, username } = params;
+  const { id, username } = await params;
   const post = await prisma.post.findUnique({
     where: {
       id: Number(id),

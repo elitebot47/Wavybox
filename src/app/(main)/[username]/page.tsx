@@ -2,7 +2,6 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import UpperProfile from "@/components/profilepage/upperhalf";
 import LowerProfile from "@/components/profilepage/lowerhalf";
-import { any } from "zod";
 
 export default async function ProfilePage({
   params,
