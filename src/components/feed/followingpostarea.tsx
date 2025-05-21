@@ -21,7 +21,7 @@ export default function FollowingPosts({ posts }) {
           images={post.images}
           username={post.author.username}
           content={post.content}
-          createdAt={new Date(post.createdAt).getTime()}
+          createdAt={`${new Date(post.createdAt).getTime()}`}
         ></Post>
       ))}
     </div>

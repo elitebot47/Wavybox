@@ -2,6 +2,8 @@ import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { verifyPassword } from "./hash";
 import { prisma } from "../lib/prisma";
+import { Token } from "@/types";
+import { JWT } from "next-auth/jwt";
 
 interface Credentials {
   email: string;
@@ -63,7 +65,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: JWT; user?: any }) {
       if (user) {
         token.id = user.id;
         token.email = user.email;
@@ -72,7 +74,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: any; token?: JWT }) {
       if (session.user) {
         session.user.id = token.id;
         session.user.email = token.email;

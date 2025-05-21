@@ -4,10 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { username: string } }
+  { params }: { params: Promise<{ username: string }> }
 ) {
   const session = await auth();
-  const { username } = params;
+  const { username } = await params;
 
   if (!session) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });

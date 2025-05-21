@@ -1,7 +1,7 @@
 import PostArea from "../feed/postarea";
 
-export default function LowerProfile({ initialData }: { initialData: {} }) {
-  const username = initialData.username;
+export default function LowerProfile({ PostsData }: { PostsData: any }) {
+  const username = PostsData.username;
 
   return (
     <div>
@@ -19,7 +19,7 @@ export default function LowerProfile({ initialData }: { initialData: {} }) {
       </div>
       <div>
         <PostArea
-          initialposts={initialData.posts}
+          initialposts={PostsData.posts}
           username={username}
           queryKey={["user-posts", username]}
           queryParams={{ username }}

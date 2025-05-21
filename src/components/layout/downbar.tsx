@@ -42,7 +42,11 @@ export default function DownBar({ className }) {
       ))}
       <Link href={`${session.user.username}`} aria-label={"My profile"}>
         <SidebarButton
-          avatarUrl={`${session.user.avatarUrl}`}
+          avatarUrl={
+            "avatarUrl" in session.user && session.user.avatarUrl
+              ? String(session.user.avatarUrl)
+              : ""
+          }
           className={` shadow-none h-auto p-1  border-2 border-gray-400 ${
             pathname === `${session.user.id}`
               ? "shadow-2xl border-2 shadow-black text-white border-black"

@@ -32,13 +32,12 @@ export default function Postview({ params }) {
       className=" flex flex-col    overflow-hidden border-t-0"
     >
       <Post
-        avatarUrl={post.author.avatarUrl}
-        id={post.id}
-        images={post.images}
-        username={post.author.username}
-        content={post.content}
-        createdAt={new Date(post.createdAt).getTime()}
-        userId={post.author.id}
+        avatarUrl={String(post.author.avatarUrl ?? "")}
+        id={Number(post.id)}
+        images={Array(post.images)}
+        username={String(post.author.username)}
+        content={String(post.content)}
+        createdAt={`${new Date(post.createdAt).getTime()}`}
       />
     </motion.div>
   );

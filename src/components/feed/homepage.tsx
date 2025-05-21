@@ -1,14 +1,11 @@
 "use client";
 import { useState } from "react";
-import { Button } from "../ui/button";
 import Postform from "./postform";
-import { useSession } from "next-auth/react";
 import PostArea from "./postarea";
 import FollowingPosts from "./followingpostarea";
 import { motion } from "framer-motion";
 export default function HomePage({ initialposts }) {
   const [allposts, setAllPosts] = useState(true);
-  const { data: session } = useSession();
   return (
     <div className="flex flex-col  ">
       <div className="relative flex w-full border-b border-gray-300">

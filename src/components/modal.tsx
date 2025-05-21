@@ -11,8 +11,6 @@ import { useEffect } from "react";
 
 export default function Modals() {
   const { ismobile } = useMobileStore();
-  const { data: session } = useSession();
-  const userid = session?.user.id;
   const { isOpen, openModal, closeModal } = usePostModalStore();
   useEffect(() => {
     if (isOpen) {
@@ -55,10 +53,7 @@ export default function Modals() {
                 </Button>
               </div>
 
-              <Postform
-                className="shadow-none border-0 outline-0"
-                userid={userid}
-              />
+              <Postform className="shadow-none border-0 outline-0" />
             </motion.div>
           </motion.div>
         )}

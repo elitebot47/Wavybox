@@ -49,7 +49,11 @@ export default function LeftSideBar() {
         <div className="flex justify-center items-center">
           <Link href={`${session.user.username}`} aria-label={"My profile"}>
             <SidebarButton
-              avatarUrl={`${session.user.avatarUrl}`}
+              avatarUrl={
+                "avatarUrl" in session.user && session.user.avatarUrl
+                  ? String(session.user.avatarUrl)
+                  : ""
+              }
               className={` shadow-none h-auto p-1  border-2 border-gray-400`}
             />
           </Link>

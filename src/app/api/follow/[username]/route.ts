@@ -4,9 +4,9 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { username: string } }
+  { params }: { params: Promise<{ username: string }> }
 ) {
-  const { username } = params;
+  const { username } = await params;
   const session = await auth();
   const followingUser = await prisma.user.findUnique({
     where: {
@@ -51,10 +51,10 @@ export async function POST(
 }
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { username: string } }
+  { params }: { params: Promise<{ username: string }> }
 ) {
   const session = await auth();
-  const { username } = params;
+  const { username } = await params;
   if (!session)
     return NextResponse.json({ message: "Not authenticated" }, { status: 401 });
   const followingUser = await prisma.user.findUnique({

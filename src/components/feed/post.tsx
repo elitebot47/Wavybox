@@ -36,7 +36,9 @@ import { useState } from "react";
 import Loader from "../ui/loader";
 
 function getShortRelativeTime(date: Date | string) {
-  const full = formatDistanceToNowStrict(new Date(date), { addSuffix: true });
+  const full = formatDistanceToNowStrict(new Date(Number(date)), {
+    addSuffix: true,
+  });
 
   return full
     .replace(" hours", " h")
