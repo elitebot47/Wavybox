@@ -1,5 +1,6 @@
 import { Follownav } from "@/components/profilepage/FollowsNavigation";
 import { Button } from "@/components/ui/button";
+import { waitForDebugger } from "inspector";
 import { ArrowLeftSquareIcon } from "lucide-react";
 import Link from "next/link";
 import React from "react";
@@ -9,9 +10,9 @@ export default async function FollowsLayout({
   params,
 }: {
   children: React.ReactNode;
-  params: { username: string };
+  params: Promise<{ username: string }>;
 }) {
-  const { username } = params;
+  const { username } = await params;
 
   return (
     <div>
