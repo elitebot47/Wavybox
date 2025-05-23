@@ -20,7 +20,7 @@ export default async function MainLayout({
   return (
     <AnimationLayout>
       <div className="flex justify-center w-full  sm:px-8">
-        <aside className="hidden lg:flex lg:items-center lg:justify-center lg:w-[250px] z-[30] sticky top-0 h-screen">
+        <aside className="hidden lg:flex lg:items-center lg:justify-center lg:w-[250px] z-30 sticky top-0 h-screen">
           <LeftSideBar />
         </aside>
         <aside className="lg:hidden block">
@@ -29,11 +29,11 @@ export default async function MainLayout({
           </div>
         </aside>
         <Modals></Modals>
-        <main className="w-full max-w-[600px] border-x z-[20] border-gray-200 min-h-screen">
+        <main className="w-full max-w-[600px] border-x z-50 border-gray-200 min-h-screen">
           {children}
         </main>
 
-        <aside className="hidden lg:block xl:w-[290px] z-[20] sticky top-0 h-screen">
+        <aside className="hidden lg:block xl:w-[290px] z-30 sticky top-0 h-screen">
           <RightSideBar />
         </aside>
       </div>
