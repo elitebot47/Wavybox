@@ -15,7 +15,7 @@ export function SignOutButton({ className }: { className?: string }) {
 
   return (
     <Button
-      className={`${className}   `}
+      className={`${className} h-full w-full  `}
       onClick={() => {
         setLoaderstate(true);
         signOut({ callbackUrl: "/signin" });

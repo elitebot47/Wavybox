@@ -157,9 +157,8 @@ export default function Postform({ className }: { className?: string }) {
         opacity: { duration: 0.5, ease: "easeOut" },
         layouty: { duration: 0.5, ease: "easeOut" },
       }}
-      className={`border  sm:rounded-none shadow-none border-t-0  border-gray-200 lg:p-4 flex flex-col gap-3 bg-white  overflow-hidden px-2 py-2 ${
-        className ?? ""
-      }`}
+      className={`sm:rounded-none shadow-none border-gray-200 lg:px-3 lg:py-3 flex flex-col gap-3 bg-white  overflow-hidden px-2 py-2.5
+         ${className ?? ""}`}
     >
       <div>
         {ailoader && (

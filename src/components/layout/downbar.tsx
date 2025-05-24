@@ -10,6 +10,7 @@ import SidebarButton from "../ui/lsidebarbutton";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
+import { useScrollDirection } from "../../hooks/useScrollDirection";
 
 const navItems = [
   { href: "/explore", icon: LucideHash, label: "Explore" },
@@ -21,12 +22,14 @@ const navItems = [
 
 export default function DownBar({ className }) {
   const { data: session } = useSession();
-
+  const scrollDirection = useScrollDirection();
   const pathname = usePathname();
 
   return (
     <div
-      className={`flex justify-around items-center  h-16 border-t-2 border-black  ${className}`}
+      className={`${
+        scrollDirection == "down" && "opacity-30"
+      } flex justify-around items-center  h-16 border-t-2 border-black  ${className}`}
     >
       {navItems.map(({ href, icon: Icon, label }) => (
         <Link key={href} href={href} aria-label={label}>
