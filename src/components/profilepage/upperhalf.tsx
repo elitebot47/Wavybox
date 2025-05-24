@@ -44,7 +44,8 @@ export default function UpperProfile({ initialData }) {
         )}
       </div>
 
-      <div className="px-4 mt-2">
+      <div className="px-7 mt-2">
+        <div className="text-black font-bold text-2xl">{data.name}</div>
         <div className="text-gray-500">@{data.username}</div>
         <div className="flex items-center gap-1 text-gray-500 mt-2">
           <div>

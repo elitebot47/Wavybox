@@ -29,6 +29,7 @@ export default function PostArea({
       <div className="flex flex-col overflow-hidden border-t-0 border-x-0">
         {data.map((post: UserPost<PostImage>) => (
           <Post
+            name={post.author.name}
             avatarUrl={post.author.avatarUrl}
             key={post.id}
             id={post.id}

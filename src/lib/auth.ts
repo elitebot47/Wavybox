@@ -51,6 +51,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             email: user.email,
             username: user.username,
             avatarUrl: user.avatarUrl,
+            name: user.name,
           };
         } catch (error) {
           console.error("Auth error:", error);
@@ -70,6 +71,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         token.email = user.email;
         token.username = user.username;
         token.avatarUrl = user.avatarUrl;
+        token.name = user.name;
       }
       return token;
     },
@@ -79,6 +81,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.email = token.email;
         session.user.username = token.username;
         session.user.avatarUrl = token.avatarUrl;
+        session.user.name = token.name;
       }
       return session;
     },

@@ -9,16 +9,25 @@ import { generateRandomAvatarUrl } from "@/lib/avatar";
 interface Creds {
   email: string;
   password: string;
+  name: string;
 }
 
 const signupSchema = z.object({
-  email: z.string().min(1, "Email is required"),
+  email: z
+    .string()
+    .min(5, "Email is too short")
+    .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid Email format"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  name: z
+    .string()
+    .min(3, "Name is too short,Enter you full name")
+    .max(30, "Name cannot exceed 30 characters")
+    .regex(/^[a-zA-Z]+$/, "Name must contain only alphabetical characters"),
 });
 export async function POST(req: NextRequest) {
   try {
-    const { email, password }: Creds = await req.json();
-    const parsed = signupSchema.safeParse({ email, password });
+    const { email, password, name }: Creds = await req.json();
+    const parsed = signupSchema.safeParse({ email, password, name });
     if (!parsed.success) {
       const errors = parsed.error.errors
         .map((error) => error.message)
@@ -40,6 +49,7 @@ export async function POST(req: NextRequest) {
         password: hashedPassword,
         username,
         avatarUrl,
+        name,
       },
     });
     return NextResponse.json(

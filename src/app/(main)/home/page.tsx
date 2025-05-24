@@ -21,6 +21,7 @@ export default async function Home() {
               followerId: true,
             },
           },
+          name: true,
         },
       },
       images: {

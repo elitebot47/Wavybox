@@ -3,11 +3,22 @@ const config = {
   typescript: {
     ignoreBuildErrors: true,
   },
-};
-
-export default config;
-module.exports = {
   images: {
-    domains: ["api.dicebear.com", "res.cloudinary.com"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
+      {
+        protocol: "https",
+        hostname: "api.dicebear.com",
+      },
+      {
+        protocol: "https",
+        hostname: "avatars.dicebear.com",
+      },
+    ],
   },
 };
+
+module.exports = config;

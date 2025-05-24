@@ -21,19 +21,25 @@ const signupSchema = z.object({
     .min(5, "Email is too short")
     .regex(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, "Invalid Email format"),
   password: z.string().min(6, "Password must be at least 6 characters"),
+  name: z
+    .string()
+    .min(3, "Name is too short,Enter you full name")
+    .max(30, "Name cannot exceed 30 characters")
+    .regex(/^[a-zA-Z]+$/, "Name must contain only alphabetical characters"),
 });
 export default function SignUpPage() {
   const [showleftinfo, setShowleftinfo] = useState(true);
   const [Signuploader, setSignuploader] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const router = useRouter();
 
   async function Sendcreds() {
     setSignuploader(true);
     const formattedEmail = email.toLowerCase().trim();
     setEmail(formattedEmail);
-    const result = signupSchema.safeParse({ email, password });
+    const result = signupSchema.safeParse({ email, password, name });
     if (!result.success) {
       const errors = result.error.errors
         .map((error) => error.message)
@@ -46,6 +52,7 @@ export default function SignUpPage() {
       const response = await axios.post("/api/signup", {
         email,
         password,
+        name,
       });
       toast.message(response.data.message + " Login now");
       setShowleftinfo(false);
@@ -111,6 +118,14 @@ export default function SignUpPage() {
                 <div className="flex flex-col gap-3">
                   <Input
                     autoFocus
+                    disabled={Signuploader}
+                    onChange={(e) => setName(e.target.value)}
+                    value={name}
+                    type="text"
+                    placeholder="Name"
+                    className=" w-full border focus:!ring-black focus:!ring-1  p-2 rounded-md"
+                  />
+                  <Input
                     disabled={Signuploader}
                     onChange={(e) => setEmail(e.target.value)}
                     value={email}

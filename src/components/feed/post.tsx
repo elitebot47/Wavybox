@@ -65,6 +65,8 @@ export default function Post({
   id,
   avatarUrl,
 }: UserPost & { tags?: string[] }) {
+  console.log(name);
+
   const queryClient = useQueryClient();
   const router = useRouter();
   const publicIdArray = [];
@@ -118,18 +120,17 @@ export default function Post({
           </div>
           <div className="flex-1">
             <div className="flex justify-between items-center">
-              <div className="">
-                <div className="font-semibold">{name}</div>
-                <div className="text-sm text-muted-foreground">
-                  <Link
-                    className="hover:underline hover:underline-offset-2 mr-3 text-black font-bold"
-                    href={`/${username}`}
-                    onClick={handleUsernameClick}
-                  >
-                    @{username}
-                  </Link>
-                  · {timeago}
-                </div>
+              <div className="text-sm pl-2 items-center  flex text-muted-foreground">
+                <Link
+                  className="text-lg hover:underline hover:underline-offset-2 mr-2 text-black font-bold"
+                  href={`/${username}`}
+                  onClick={handleUsernameClick}
+                >
+                  {name}
+                </Link>
+
+                <div className=" mr-3 text-gray-800">@{username}</div>
+                {timeago}
               </div>
 
               <DropdownMenu>

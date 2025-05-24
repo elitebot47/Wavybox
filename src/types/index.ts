@@ -7,6 +7,7 @@ export interface PostImage {
 export interface Author {
   avatarUrl: string;
   username: string;
+  name: string;
 }
 export interface UserPost<T = PostImage> {
   author?: Author;
