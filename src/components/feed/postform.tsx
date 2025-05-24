@@ -25,7 +25,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { CldImage } from "next-cloudinary";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { buildStyles, CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import { usePostModalStore } from "@/store/postStore";
@@ -33,10 +33,11 @@ import { useMobileStore } from "@/store/isMobileStore";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { File } from "buffer";
 
-interface imageData {
-  url: string;
-  public_id: string;
+export interface imageData {
+  secureUrl: string;
+  publicId: string;
 }
 
 export default function Postform({ className }: { className?: string }) {
@@ -53,6 +54,7 @@ export default function Postform({ className }: { className?: string }) {
   const postcontentRef = useRef(null);
   const [AiacceptButton, setAiacceptButton] = useState(false);
   const router = useRouter();
+
   async function handleUpload(event: React.ChangeEvent<HTMLInputElement>) {
     const files: any = event.target.files;
     if (!files || files.length === 0) return;
@@ -60,32 +62,32 @@ export default function Postform({ className }: { className?: string }) {
       toast.error("Max upload allowed:4");
       return;
     }
-
-    const uploadedimages: Array<imageData> = [];
     setimageloader(true);
-    const formData = new FormData();
-    for (let i = 0; i < files.length; i++) {
-      if (files[i].size > 5 * 1024 * 1024) {
-        toast.error(`File ${files[i].name} is too large. Max size is 5MB`);
-        continue;
+    const uploadedPromises = Array.from(files).map(async (file: File) => {
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error(`File ${file.name} is too large. Max size is 5MB`);
+        return null;
       }
-      formData.append("file", files[i]);
+      const formData = new FormData();
+      formData.append("file", file);
       formData.append("upload_preset", "post-preset");
       try {
         const response = await axios.post("/api/post/media", formData);
-        const { secureUrl, public_id } = response.data;
-        uploadedimages.push({ url: secureUrl, public_id });
-      } catch (error) {
-        toast.error("Upload failed", error);
-      }
-    }
-    setimagesArray((prev) => [...prev, ...uploadedimages]);
-
+        const { publicId, secureUrl } = response.data;
+        return { secureUrl, publicId };
+      } catch (error) {}
+    });
+    const uploadedImages = (await Promise.all(uploadedPromises)).filter(
+      Boolean
+    ) as imageData[];
+    setimagesArray((prev) => [...prev, ...uploadedImages]);
     setimageloader(false);
   }
 
   async function Aicontent(processtype: string) {
     setAiloader(true);
+    document.body.style.overflow = "hidden";
+
     const postcontent = postTextcontent.trim();
     postcontentRef.current = postcontent;
     if (!postcontent) {
@@ -100,6 +102,7 @@ export default function Postform({ className }: { className?: string }) {
         processtype,
       });
       setpostTextcontent(aiResult.data.message);
+
       setAiacceptButton(true);
       setAiloader(false);
     } catch (error) {
@@ -160,89 +163,105 @@ export default function Postform({ className }: { className?: string }) {
       className={`sm:rounded-none shadow-none border-gray-200 lg:px-3 lg:py-3 flex flex-col gap-3 bg-white  overflow-hidden px-2 py-2.5
          ${className ?? ""}`}
     >
-      <div>
-        {ailoader && (
-          <Skeleton className="w-full min-h-[50px] max-h-full"></Skeleton>
-        )}
-        {AiacceptButton && (
-          <div className="fixed" onClick={(e) => e.stopPropagation}>
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 100, y: 0 }}
-              transition={{ duration: 0.5 }}
-              className="absolute  -top-4 -left-3 z-50 flex"
-            >
-              <Button
-                onClick={() => setAiacceptButton(false)}
-                className="  text-white p-2 transition-all duration-500 bg-black/70 hover:bg-black  h-7 rounded-none rounded-l-full "
+      <AnimatePresence>
+        <motion.div
+          layout
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 100 }}
+          exit={{ opacity: 0 }}
+        >
+          {ailoader && (
+            <Skeleton className="w-full min-h-[50px] max-h-full"></Skeleton>
+          )}
+          {AiacceptButton && (
+            <div className="fixed" onClick={(e) => e.stopPropagation}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 100, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="absolute  -top-2 -left-0.5 z-50 flex rounded-full  "
               >
-                <Check className="size-7"></Check>
-              </Button>
-              <Separator orientation="vertical" color="black"></Separator>
-              <Button
-                onClick={() => {
-                  setpostTextcontent(postcontentRef.current);
-                  setAiacceptButton(false);
-                }}
-                className="text-white transition-all duration-500   h-7 rounded-none rounded-r-full hover:bg-black  bg-black/70"
-              >
-                <Plus className="rotate-45 size-7"></Plus>
-              </Button>
-            </motion.div>
-          </div>
-        )}
-        <Textarea
-          autoFocus
-          maxLength={150}
-          value={postTextcontent}
-          disabled={ailoader || posting || AiacceptButton}
-          hidden={ailoader}
-          className={`${
-            AiacceptButton ? "blink mt-3.5  " : ""
-          } whitespace-pre-wrap rounded-2xl max-h-80 
+                <Button
+                  onClick={() => {
+                    setAiacceptButton(false);
+                    document.body.style.overflow = "";
+                  }}
+                  className="  text-white p-2 transition-all duration-500 bg-black/70   hover:bg-black  h-7 rounded-none rounded-l-full hover:scale-105 shadow-lg shadow-black/70"
+                >
+                  <Check className="size-7"></Check>
+                </Button>
+                <Separator orientation="vertical" color="black"></Separator>
+                <Button
+                  onClick={() => {
+                    setpostTextcontent(postcontentRef.current);
+                    setAiacceptButton(false);
+                    document.body.style.overflow = "";
+                  }}
+                  className="text-white transition-all duration-500   h-7 rounded-none rounded-r-full shadow-lg shadow-black/70  hover:bg-black hover:scale-105 bg-black/70"
+                >
+                  <Plus className="rotate-45 size-7"></Plus>
+                </Button>
+              </motion.div>
+            </div>
+          )}
+          <Textarea
+            autoFocus
+            maxLength={150}
+            value={postTextcontent}
+            disabled={ailoader || posting || AiacceptButton}
+            hidden={ailoader}
+            className={`${
+              AiacceptButton ? "blink mt-5  " : ""
+            } whitespace-pre-wrap rounded-2xl max-h-80 
             resize-none !text-lg textarea-class p-2  text-gray-800 placeholder:text-gray-400 w-full min-h-[50px] overflow-y-auto   outline-none border-none !border-0 !shadow-none focus:!ring-0 focus:!ring-offset-0 `}
-          onChange={(e) => setpostTextcontent(e.target.value)}
-          placeholder="so what's on your mood?"
-        />
-      </div>
+            onChange={(e) => setpostTextcontent(e.target.value)}
+            placeholder="so what's on your mood?"
+          />
+        </motion.div>
+      </AnimatePresence>
       {imagesArray && (
         <div className="flex flex-wrap ">
-          {imagesArray.map((image) => (
-            <div
-              className="relative group h-auto rounded-lg overflow-hidden m-0.5"
-              key={image.public_id}
-            >
-              <CldImage
-                src={image.url}
-                alt={image.public_id}
-                width={ismobile ? 70 : 120}
-                height={ismobile ? 70 : 120}
-                quality="auto"
-                format="auto"
-                loading="eager"
-              ></CldImage>
-              <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          <AnimatePresence>
+            {imagesArray.map((image) => (
+              <motion.div
+                layout
+                initial={{ opacity: 100, y: 0 }}
+                className="relative group h-auto rounded-lg overflow-hidden m-0.5"
+                key={image.publicId}
+                exit={{ opacity: 0, y: 20, scale: 0.3 }}
+              >
+                <CldImage
+                  src={image.secureUrl}
+                  alt={image.publicId}
+                  width={ismobile ? 70 : 120}
+                  height={ismobile ? 70 : 120}
+                  loading="eager"
+                  format="auto"
+                  quality="auto"
+                ></CldImage>
+                <div className="absolute inset-0 bg-black/70 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
-              <div className="absolute top-1.5 right-1.5 lg:opacity-0 opacity-100 group-hover:opacity-100 transition-opacity  duration-200 ">
-                <button
-                  className="text-black lg:text-white"
-                  title="Remove"
-                  onClick={async () => {
-                    setimagesArray((prev) =>
-                      prev.filter((img) => img.public_id != image.public_id)
-                    );
-                    await axios.delete(`/api/post/media/`, {
-                      params: {
-                        publicIdArray: [image.public_id],
-                      },
-                    });
-                  }}
-                >
-                  <CircleX size={29}></CircleX>
-                </button>
-              </div>
-            </div>
-          ))}
+                <div className="absolute top-1.5 right-1.5 lg:opacity-0 opacity-100 group-hover:opacity-100 transition-opacity  duration-500 ">
+                  <button
+                    className="text-black duration-500 transition-all hover:scale-125 lg:text-white"
+                    title="Remove"
+                    onClick={async () => {
+                      setimagesArray((prev) =>
+                        prev.filter((img) => img.publicId != image.publicId)
+                      );
+                      await axios.delete(`/api/post/media/`, {
+                        data: {
+                          publicIdArray: [image.publicId],
+                        },
+                      });
+                    }}
+                  >
+                    <CircleX size={25}></CircleX>
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
       )}
       <Separator />
@@ -290,7 +309,7 @@ export default function Postform({ className }: { className?: string }) {
                 }
               />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="z-[210]">
               <SelectItem value="Hindi">Hindi</SelectItem>
               <SelectItem value="Hinglish">Hinglish</SelectItem>
               <SelectItem value="English">English</SelectItem>
