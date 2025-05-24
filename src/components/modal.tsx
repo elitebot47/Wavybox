@@ -29,7 +29,7 @@ export default function Modals() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-0 px-2 bg-black/70 backdrop-blur-xs flex justify-center items-start pt-12 z-50"
+            className="fixed inset-0 px-2 bg-black/70 backdrop-blur-xs flex justify-center items-start pt-12 z-[100]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

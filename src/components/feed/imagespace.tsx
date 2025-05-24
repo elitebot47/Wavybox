@@ -28,6 +28,8 @@ export default function Imagespace({ images }: ImageGridProps) {
           <CldImage
             src={image.secureUrl}
             alt={image.publicId}
+            quality="auto"
+            format="auto"
             fill
             className="object-cover"
             loading="lazy"

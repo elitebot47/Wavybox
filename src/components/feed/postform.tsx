@@ -65,6 +65,10 @@ export default function Postform({ className }: { className?: string }) {
     setimageloader(true);
     const formData = new FormData();
     for (let i = 0; i < files.length; i++) {
+      if (files[i].size > 5 * 1024 * 1024) {
+        toast.error(`File ${files[i].name} is too large. Max size is 5MB`);
+        continue;
+      }
       formData.append("file", files[i]);
       formData.append("upload_preset", "post-preset");
       try {
@@ -72,7 +76,7 @@ export default function Postform({ className }: { className?: string }) {
         const { secureUrl, public_id } = response.data;
         uploadedimages.push({ url: secureUrl, public_id });
       } catch (error) {
-        console.error("Upload failed", error);
+        toast.error("Upload failed", error);
       }
     }
     setimagesArray((prev) => [...prev, ...uploadedimages]);
@@ -205,7 +209,7 @@ export default function Postform({ className }: { className?: string }) {
         <div className="flex flex-wrap ">
           {imagesArray.map((image) => (
             <div
-              className="relative group rounded-lg overflow-hidden m-0.5"
+              className="relative group h-auto rounded-lg overflow-hidden m-0.5"
               key={image.public_id}
             >
               <CldImage
@@ -213,6 +217,8 @@ export default function Postform({ className }: { className?: string }) {
                 alt={image.public_id}
                 width={ismobile ? 70 : 150}
                 height={ismobile ? 70 : 150}
+                quality="auto"
+                format="auto"
                 loading="eager"
               ></CldImage>
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
