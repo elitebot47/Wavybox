@@ -21,8 +21,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { usePostModalStore } from "@/store/postStore";
 import { SignOutButton } from "../ui/SignButtons";
-import { easeIn, easeInOut, easeOut, motion } from "framer-motion";
-import { Button } from "../ui/button";
+import { easeOut, motion } from "framer-motion";
 import Image from "next/image";
 
 const navItems = [

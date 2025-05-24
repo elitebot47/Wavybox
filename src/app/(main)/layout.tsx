@@ -24,8 +24,8 @@ export default async function MainLayout({
           <LeftSideBar />
         </aside>
         <aside className="lg:hidden block">
-          <div className="block lg:hidden fixed bottom-0 left-0 right-0 z-50">
-            <DownBar className="lg:hidden block justify-around items-center shadow-2xl shadow-black bg-white " />
+          <div className="block lg:hidden fixed bottom-0 left-0 right-0 z-[200]">
+            <DownBar className=" justify-around items-center shadow-2xl shadow-black bg-white " />
           </div>
         </aside>
         <Modals></Modals>

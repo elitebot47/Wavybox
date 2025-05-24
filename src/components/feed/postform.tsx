@@ -157,7 +157,7 @@ export default function Postform({ className }: { className?: string }) {
         opacity: { duration: 0.5, ease: "easeOut" },
         layouty: { duration: 0.5, ease: "easeOut" },
       }}
-      className={`border   shadow-none border-t-0 border-gray-200 p-4 flex flex-col gap-3 bg-white  overflow-hidden ${
+      className={`border sm:w-screen sm:rounded-none shadow-none border-t-0  border-gray-200 lg:p-4 flex flex-col gap-3 bg-white  overflow-hidden px-2 py-2 ${
         className ?? ""
       }`}
     >
@@ -171,7 +171,7 @@ export default function Postform({ className }: { className?: string }) {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 100, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="absolute -top-4 -left-3 z-50 flex"
+              className="absolute  -top-4 -left-3 z-50 flex"
             >
               <Button
                 onClick={() => setAiacceptButton(false)}
@@ -200,7 +200,8 @@ export default function Postform({ className }: { className?: string }) {
           hidden={ailoader}
           className={`${
             AiacceptButton ? "blink mt-3.5  " : ""
-          } whitespace-pre-wrap rounded-2xl  resize-none !text-lg textarea-class p-2  text-gray-800 placeholder:text-gray-400 w-full min-h-[50px]  outline-none border-none !border-0 !shadow-none focus:!ring-0 focus:!ring-offset-0 `}
+          } whitespace-pre-wrap rounded-2xl max-h-80 
+            resize-none !text-lg textarea-class p-2  text-gray-800 placeholder:text-gray-400 w-full min-h-[50px] overflow-y-auto   outline-none border-none !border-0 !shadow-none focus:!ring-0 focus:!ring-offset-0 `}
           onChange={(e) => setpostTextcontent(e.target.value)}
           placeholder="so what's on your mood?"
         />
@@ -215,8 +216,8 @@ export default function Postform({ className }: { className?: string }) {
               <CldImage
                 src={image.url}
                 alt={image.public_id}
-                width={ismobile ? 70 : 150}
-                height={ismobile ? 70 : 150}
+                width={ismobile ? 70 : 120}
+                height={ismobile ? 70 : 120}
                 quality="auto"
                 format="auto"
                 loading="eager"

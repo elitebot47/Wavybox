@@ -29,14 +29,14 @@ export default function Modals() {
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-0 px-2 bg-black/70 backdrop-blur-xs flex justify-center items-start pt-12 z-[100]"
+            className="fixed inset-0 lg:px-2   bg-black/70 backdrop-brightness-50 backdrop-blur-xs lg:backdrop-blur-xs flex justify-center items-start pt-12 z-[210]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => closeModal()}
+            onClick={() => !ismobile && closeModal()}
           >
             <motion.div
-              className="  bg-white rounded-xl shadow-lg max-w-xl w-full overflow-hidden"
+              className="  bg-white lg:rounded-xl rounded-none shadow-lg lg:max-w-xl lg:w-full  w-screen  overflow-hidden"
               initial={{ opacity: 0, y: -60 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 700 }}
@@ -59,7 +59,7 @@ export default function Modals() {
         )}
       </AnimatePresence>
       {ismobile && !isOpen && (
-        <div className="fixed bottom-35 right-20 z-50">
+        <div className="fixed bottom-35 right-20 z-[500]">
           <Button
             onClick={() => openModal()}
             size="icon"
