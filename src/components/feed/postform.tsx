@@ -83,8 +83,13 @@ export default function Postform({ className }: { className?: string }) {
     setimagesArray((prev) => [...prev, ...uploadedImages]);
     setimageloader(false);
   }
-
-  async function Aicontent(processtype: string) {
+  async function ALreadyTranslated() {
+    toast.info(`Post is already translated `);
+    setLanguage("");
+    setAiloader(false);
+    document.body.style.overflow = "";
+  }
+  async function PreAiReq() {
     setAiloader(true);
     document.body.style.overflow = "hidden";
 
@@ -93,22 +98,14 @@ export default function Postform({ className }: { className?: string }) {
     if (!postcontent) {
       toast.error("Post cannot be empty");
       setAiloader(false);
-      return;
+      document.body.style.overflow = "";
+      return null;
     }
-
-    try {
-      const aiResult = await axios.post("/api/ai/post", {
-        postcontent,
-        processtype,
-      });
-      setpostTextcontent(aiResult.data.message);
-
-      setAiacceptButton(true);
-      setAiloader(false);
-    } catch (error) {
-      toast.error("AI features not currently available");
-      setAiloader(false);
-    }
+    return 1;
+  }
+  async function PostAiReq() {
+    setAiacceptButton(true);
+    setAiloader(false);
   }
 
   async function Handlepost() {
@@ -145,6 +142,7 @@ export default function Postform({ className }: { className?: string }) {
       closeModal();
       setpostTextcontent("");
       setimagesArray([]);
+      setLanguage("");
       setPosting(false);
     } catch (error) {
       toast.error("Failed to post. Please try again.");
@@ -171,7 +169,14 @@ export default function Postform({ className }: { className?: string }) {
           exit={{ opacity: 0 }}
         >
           {ailoader && (
-            <Skeleton className="w-full min-h-[50px] max-h-full"></Skeleton>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 100 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1 }}
+            >
+              <Skeleton className="w-full  min-h-[50px] max-h-full"></Skeleton>
+            </motion.div>
           )}
           {AiacceptButton && (
             <div className="fixed" onClick={(e) => e.stopPropagation}>
@@ -206,7 +211,7 @@ export default function Postform({ className }: { className?: string }) {
           )}
           <Textarea
             autoFocus
-            maxLength={150}
+            maxLength={200}
             value={postTextcontent}
             disabled={ailoader || posting || AiacceptButton}
             hidden={ailoader}
@@ -290,13 +295,32 @@ export default function Postform({ className }: { className?: string }) {
               />
             </Label>
           </Button>
-
           <Select
-            disabled={ailoader || posting}
+            disabled={ailoader || posting || AiacceptButton}
             value={language}
-            onValueChange={(e) => {
+            onValueChange={async (e) => {
+              const status = await PreAiReq();
               setLanguage(e);
-              Aicontent(`translate to ${e}`);
+              if (!status) {
+                setLanguage("");
+                return;
+              }
+              try {
+                const res = await axios.post("/api/ai/postform/translate", {
+                  content: postTextcontent,
+                  language: e,
+                });
+                if (res.data == "same") {
+                  await ALreadyTranslated();
+                  return;
+                }
+                setpostTextcontent(res.data);
+                await PostAiReq();
+              } catch (error) {
+                toast.error("AI features not currently available");
+                setLanguage("");
+                setAiloader(false);
+              }
             }}
           >
             <SelectTrigger className="w-auto h-9 bg-white  border-gray-200">
@@ -310,18 +334,33 @@ export default function Postform({ className }: { className?: string }) {
               />
             </SelectTrigger>
             <SelectContent className="z-[210]">
-              <SelectItem value="Hindi">Hindi</SelectItem>
-              <SelectItem value="Hinglish">Hinglish</SelectItem>
-              <SelectItem value="English">English</SelectItem>
-              <SelectItem value="Russian">Russian</SelectItem>
-              <SelectItem value="Chinese">Chinese</SelectItem>
-              <SelectItem value="Japanese">Japanese</SelectItem>
+              <SelectItem value="hi">Hindi</SelectItem>
+              <SelectItem value="en">English</SelectItem>
+              <SelectItem value="ru">Russian</SelectItem>
+              <SelectItem value="zh-Hans">Chinese</SelectItem>
+              <SelectItem value="ja">Japanese</SelectItem>
             </SelectContent>
           </Select>
-
           <Button
-            disabled={ailoader || posting}
-            onClick={() => Aicontent("fix spelling grammar and typing error")}
+            disabled={ailoader || posting || AiacceptButton}
+            onClick={async () => {
+              const status = await PreAiReq();
+              if (!status) {
+                return;
+              }
+
+              try {
+                const res = await axios.post("/api/ai/postform/improveWithAI", {
+                  content: postTextcontent,
+                  model: "m",
+                });
+                setpostTextcontent(res.data);
+                await PostAiReq();
+              } catch (error) {
+                toast.error("AI features not currently available");
+                setAiloader(false);
+              }
+            }}
             variant="outline"
             className="h-9 border-gray-200 w-auto"
           >
@@ -340,7 +379,6 @@ export default function Postform({ className }: { className?: string }) {
           maxValue={150}
           minValue={0}
         />
-
         <Button
           onClick={Handlepost}
           disabled={posting || AiacceptButton || ailoader || imageloader}
