@@ -201,6 +201,7 @@ export default function Postform({ className }: { className?: string }) {
                     setpostTextcontent(postcontentRef.current);
                     setAiacceptButton(false);
                     document.body.style.overflow = "";
+                    setLanguage("");
                   }}
                   className="text-white transition-all duration-500   h-7 rounded-none rounded-r-full shadow-lg shadow-black/70  hover:bg-black hover:scale-105 bg-black/70"
                 >

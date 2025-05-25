@@ -21,6 +21,7 @@ export default function PostArea({
     queryKey,
     queryFn: () => fetchPosts(queryParams),
     initialData: initialposts,
+    refetchInterval: 30 * 10000,
   });
 
   return (
