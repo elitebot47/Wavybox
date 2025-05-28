@@ -160,7 +160,7 @@ export default function Postform({ className }: { className?: string }) {
         opacity: { duration: 0.5, ease: "easeOut" },
         layouty: { duration: 0.5, ease: "easeOut" },
       }}
-      className={`sm:rounded-none shadow-none border-gray-200 lg:px-3 lg:py-3 flex flex-col gap-3 bg-white  overflow-hidden px-2 py-2.5
+      className={`sm:rounded-none shadow-none border-gray-200 lg:px-3 lg:py-3 flex flex-col gap-3 bg-white border-b-2 overflow-hidden px-2 py-2.5
          ${className ?? ""}`}
     >
       <AnimatePresence>
@@ -192,6 +192,7 @@ export default function Postform({ className }: { className?: string }) {
                   onClick={() => {
                     setAiacceptButton(false);
                     document.body.style.overflow = "";
+                    setLanguage("");
                   }}
                   className="  text-white p-2 transition-all duration-500 bg-black/70   hover:bg-black  h-7 rounded-none rounded-l-full hover:scale-105 shadow-lg shadow-black/70"
                 >
@@ -315,6 +316,7 @@ export default function Postform({ className }: { className?: string }) {
                 });
                 if (res.data == "same") {
                   await ALreadyTranslated();
+                  setLanguage("");
                   return;
                 }
                 setpostTextcontent(res.data);

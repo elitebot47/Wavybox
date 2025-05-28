@@ -1,11 +1,14 @@
 "use client";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
+const PostArea = lazy(() => import("./postarea"));
+const FollowingPosts = lazy(() => import("./followingpostarea"));
 import Postform from "./postform";
-import PostArea from "./postarea";
-import FollowingPosts from "./followingpostarea";
+// import PostArea from "./postarea";
+// import FollowingPosts from "./followingpostarea";
 import { AnimatePresence, motion } from "framer-motion";
 import { useMobileStore } from "@/store/isMobileStore";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
+import Loader from "../ui/loader";
 
 export default function HomePage({ initialposts }) {
   const { ismobile } = useMobileStore();
@@ -58,36 +61,44 @@ export default function HomePage({ initialposts }) {
       {!ismobile && (
         <Postform className={`lg:mt-10 ${!allposts && "border-b"} `} />
       )}
-      <div className="mt-14 lg:mt-0  overflow-hidden ">
-        <AnimatePresence mode="wait">
-          {allposts && (
-            <motion.div
-              key="allposts"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <PostArea
-                initialposts={initialposts}
-                queryKey={["allposts"]}
-                queryParams={{}}
-              />
-            </motion.div>
-          )}
-          {!allposts && (
-            <motion.div
-              key="following"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
-            >
-              <FollowingPosts posts={initialposts} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+      <Suspense
+        fallback={
+          <div className=" min-h-full flex justify-center items-center h-full">
+            <Loader className="h-7 w-7"></Loader>
+          </div>
+        }
+      >
+        <div className="mt-14 lg:mt-0  overflow-hidden ">
+          <AnimatePresence mode="wait">
+            {allposts && (
+              <motion.div
+                key="allposts"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <PostArea
+                  initialposts={initialposts}
+                  queryKey={["allposts"]}
+                  queryParams={{}}
+                />
+              </motion.div>
+            )}
+            {!allposts && (
+              <motion.div
+                key="following"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <FollowingPosts posts={initialposts} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </Suspense>
     </div>
   );
 }

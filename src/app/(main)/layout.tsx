@@ -6,6 +6,8 @@ import RightSideBar from "@/components/layout/rightSidebar";
 import AnimationLayout from "@/components/animationlayout";
 import Modals from "@/components/modal";
 import DownBar from "@/components/layout/downbar";
+import { Suspense } from "react";
+import Loader from "@/components/ui/loader";
 
 export default async function MainLayout({
   children,
@@ -29,9 +31,9 @@ export default async function MainLayout({
           </div>
         </aside>
         <Modals></Modals>
-        <main className="w-full max-w-[600px] border-x z-50 border-gray-200 min-h-screen">
-          {children}
-        </main>
+          <main className="w-full max-w-[600px] border-x z-50 border-gray-200 min-h-screen">
+            {children}
+          </main>
 
         <aside className="hidden lg:block xl:w-[290px] z-30 sticky top-0 h-screen">
           <RightSideBar />

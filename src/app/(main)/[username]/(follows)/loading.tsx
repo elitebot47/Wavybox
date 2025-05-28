@@ -1,11 +1,9 @@
-"use client";
-import { motion } from "framer-motion";
 import Loader from "@/components/ui/loader";
 
 export default function Loading() {
   return (
-    <motion.div className="flex items-center justify-center min-h-screen w-full">
-      <Loader />
-    </motion.div>
+    <div className="flex items-center justify-center min-h-screen w-full">
+      <Loader className="w-8 h-8" />
+    </div>
   );
 }
