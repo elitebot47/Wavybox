@@ -34,6 +34,11 @@ export default async function FollowersPage({
   });
   return (
     <div>
+      {followers.length == 0 && (
+        <div className="flex text-4xl justify-center">
+          You dont have any followers
+        </div>
+      )}
       {followers.map((follower) => (
         <ProfileCard
           key={follower.follower.id}

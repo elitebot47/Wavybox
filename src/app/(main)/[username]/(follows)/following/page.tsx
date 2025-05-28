@@ -34,6 +34,11 @@ export default async function FollwingPage({
   });
   return (
     <div>
+      {followings.length == 0 && (
+        <div className="flex text-4xl justify-center">
+          You dont follow anyone
+        </div>
+      )}
       {followings.map((following) => (
         <ProfileCard
           key={following.following.id}

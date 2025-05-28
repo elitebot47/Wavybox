@@ -27,8 +27,8 @@ import Image from "next/image";
 const navItems = [
   { href: "/home", icon: LucideHome, label: "Home" },
   { href: "/explore", icon: LucideHash, label: "Explore" },
-  { href: "/notifications", icon: BellIcon, label: "Notifications" },
-  { href: "/messages", icon: MessageCircleDashed, label: "Messages" },
+  // { href: "/notifications", icon: BellIcon, label: "Notifications" },
+  // { href: "/messages", icon: MessageCircleDashed, label: "Messages" },
   { href: "/settings", icon: LucideSettings2, label: "Settings" },
 ];
 

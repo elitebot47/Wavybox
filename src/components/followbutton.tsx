@@ -40,7 +40,11 @@ export default function FollowButton({ username, userProfileData }) {
   }
 
   return (
-    <Button className="" onClick={() => handleFollow()} disabled={loading}>
+    <Button
+      className="cursor-pointer"
+      onClick={() => handleFollow()}
+      disabled={loading}
+    >
       {loading ? (
         <Loader
           className=" w-auto !text-white

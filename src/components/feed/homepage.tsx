@@ -3,9 +3,10 @@ import { useState } from "react";
 import Postform from "./postform";
 import PostArea from "./postarea";
 import FollowingPosts from "./followingpostarea";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { useMobileStore } from "@/store/isMobileStore";
 import { useScrollDirection } from "@/hooks/useScrollDirection";
+
 export default function HomePage({ initialposts }) {
   const { ismobile } = useMobileStore();
   console.log(ismobile);
@@ -27,12 +28,7 @@ export default function HomePage({ initialposts }) {
             allposts ? "text-black" : "text-gray-500"
           }`}
         >
-          <motion.span
-            whileHover={{ scale: 1.1 }}
-            className="inline-block text-lg  "
-          >
-            All
-          </motion.span>
+          <motion.span className="inline-block text-lg  ">All</motion.span>
         </button>
         <button
           onClick={() => setAllPosts(false)}
@@ -40,12 +36,7 @@ export default function HomePage({ initialposts }) {
             !allposts ? "text-black" : "text-gray-500"
           }`}
         >
-          <motion.span
-            whileHover={{ scale: 1.1 }}
-            className="inline-block text-lg "
-          >
-            Following
-          </motion.span>
+          <motion.span className="inline-block text-lg ">Following</motion.span>
         </button>
 
         <motion.div
@@ -67,16 +58,35 @@ export default function HomePage({ initialposts }) {
       {!ismobile && (
         <Postform className={`lg:mt-10 ${!allposts && "border-b"} `} />
       )}
-      <div className="mt-14 lg:mt-0  ">
-        {allposts ? (
-          <PostArea
-            initialposts={initialposts}
-            queryKey={["allposts"]}
-            queryParams={{}}
-          />
-        ) : (
-          <FollowingPosts posts={initialposts} />
-        )}
+      <div className="mt-14 lg:mt-0  overflow-hidden ">
+        <AnimatePresence mode="wait">
+          {allposts && (
+            <motion.div
+              key="allposts"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <PostArea
+                initialposts={initialposts}
+                queryKey={["allposts"]}
+                queryParams={{}}
+              />
+            </motion.div>
+          )}
+          {!allposts && (
+            <motion.div
+              key="following"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <FollowingPosts posts={initialposts} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

@@ -63,19 +63,21 @@ export default function Postform({ className }: { className?: string }) {
       return;
     }
     setimageloader(true);
-    const uploadedPromises = Array.from(files).map(async (file: File) => {
+    const uploadedPromises = Array.from(files as File[]).map(async (file) => {
       if (file.size > 5 * 1024 * 1024) {
         toast.error(`File ${file.name} is too large. Max size is 5MB`);
         return null;
       }
       const formData = new FormData();
-      formData.append("file", file);
+      formData.append("file", file as Blob);
       formData.append("upload_preset", "post-preset");
       try {
         const response = await axios.post("/api/post/media", formData);
         const { publicId, secureUrl } = response.data;
         return { secureUrl, publicId };
-      } catch (error) {}
+      } catch (error) {
+        toast.error("Upload failed! error:", error);
+      }
     });
     const uploadedImages = (await Promise.all(uploadedPromises)).filter(
       Boolean
@@ -369,23 +371,29 @@ export default function Postform({ className }: { className?: string }) {
             <PencilIcon className="block sm:hidden"></PencilIcon>
           </Button>
         </div>
-        <CircularProgressbar
-          styles={buildStyles({
-            pathColor: "black",
-            trailColor: "#e5e7eb",
-          })}
-          strokeWidth={20}
-          className="text-black w-5 h-5"
-          value={postTextcontent.length}
-          maxValue={150}
-          minValue={0}
-        />
+        <div className="mr-auto flex justify-center items-center ml-3">
+          <CircularProgressbar
+            styles={buildStyles({
+              pathColor: "black",
+              trailColor: "#e5e7eb",
+              pathTransitionDuration: 0.7,
+            })}
+            strokeWidth={25}
+            className="text-black  w-5 h-5"
+            value={postTextcontent.length}
+            maxValue={150}
+            minValue={0}
+          />
+        </div>
         <Button
           onClick={Handlepost}
-          disabled={posting || AiacceptButton || ailoader || imageloader}
-          className=" w-auto h-9 bg-black hover:bg-gray-800 text-lg    text-white"
+          className=" w-auto h-9  bg-black hover:bg-gray-800 text-lg  rounded-full  text-white"
         >
-          {posting ? <Loader className="text-white" /> : "Post"}
+          {posting ? (
+            <Loader className="m-auto rounded-full text-white" />
+          ) : (
+            "Post"
+          )}
         </Button>
       </div>
     </motion.div>

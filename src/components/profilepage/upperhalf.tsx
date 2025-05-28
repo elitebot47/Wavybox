@@ -37,7 +37,7 @@ export default function UpperProfile({ initialData }) {
             Edit profile
           </Button>
         ) : (
-          <FollowButton
+          <FollowButton 
             username={data.username}
             userProfileData={data}
           ></FollowButton>

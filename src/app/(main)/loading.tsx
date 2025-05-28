@@ -6,12 +6,11 @@ export default function Loading() {
   return (
     <motion.div
       className="flex items-center justify-center min-h-screen w-full"
-      initial={{ opacity: 0, scale: 0.5 }}
+      initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0, scale: 0.5 }}
-      transition={{ duration: 0.5 }}
+      exit={{ opacity: 0 }}
     >
-      <Loader />
+      <Loader className="w-8 h-8" />
     </motion.div>
   );
 }
