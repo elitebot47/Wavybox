@@ -13,6 +13,9 @@ export default function FollowingPosts({ posts }) {
 
   return (
     <div>
+      {followingposts?.length == 0 && (
+        <div>Follow someone to see their posts here</div>
+      )}
       {followingposts.map((post) => (
         <Post
           avatarUrl={post.author.avatarUrl}
