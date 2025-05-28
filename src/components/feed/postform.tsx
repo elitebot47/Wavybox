@@ -388,6 +388,7 @@ export default function Postform({ className }: { className?: string }) {
         <Button
           onClick={Handlepost}
           className=" w-auto h-9  bg-black hover:bg-gray-800 text-lg  rounded-full  text-white"
+          disabled={posting || AiacceptButton || ailoader || imageloader}
         >
           {posting ? (
             <Loader className="m-auto rounded-full text-white" />
